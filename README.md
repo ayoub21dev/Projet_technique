@@ -83,7 +83,7 @@ Messages de succès / erreur
 
 ---
 
-## 💻 Sujet - Live Coding
+##  Sujet - Live Coding
 
 - Un bouton "Ajouter Contact" qui ouvre une modale pour créer un nouveau contact.
 - Une barre de recherche filtrant les contacts par nom.
