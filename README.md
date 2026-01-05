@@ -82,6 +82,10 @@ Messages de succès / erreur
 ![Class Diagram](asses/DigrmaeDS.png)
 
 ---
-Sujet - Live coding
-Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
-Une barre de recherche filtrant des éléments par titre.
+
+## 💻 Sujet - Live Coding
+
+- Un bouton "Ajouter Contact" qui ouvre une modale pour créer un nouveau contact.
+- Une barre de recherche filtrant les contacts par nom.
+- Une liste déroulante pour filtrer les contacts par ville.
+
