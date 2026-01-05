@@ -79,6 +79,9 @@ Messages de succès / erreur
 
 ### Diagramme de Classe
 
-![Class Diagram](asses/DigrameDS.png)
+![Class Diagram](asses/DigrmaeDS.png)
 
 ---
+Sujet - Live coding
+Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
+Une barre de recherche filtrant des éléments par titre.
