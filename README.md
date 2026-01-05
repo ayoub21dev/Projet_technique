@@ -31,7 +31,7 @@ marp: true
 
 ## 🎯 Contexte du Projet
 
-![2-tup](asses/2_tup.png)
+![2-tup](asses/La-methode-2TUP-6.png)
 
 ---
 
