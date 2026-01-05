@@ -1,0 +1,36 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+class User {
+  +id : BigInt
+  +name : String
+  +email : String
+  +password : String
+  +role : String
+  +created_at : Timestamp
+  +updated_at : Timestamp
+}
+
+class Ville {
+  +id : BigInt
+  +nom : String
+  +created_at : Timestamp
+  +updated_at : Timestamp
+}
+
+class Contact {
+  +id : BigInt
+  +nom : String
+  +prenom : String
+  +email : String
+  +telephone : String
+  +photo : String
+  +ville_id : BigInt
+  +created_at : Timestamp
+  +updated_at : Timestamp
+}
+
+Ville "1" -- "*" Contact : contient >
+
+@enduml

@@ -67,10 +67,18 @@ Messages de succès / erreur
 
 ---
 
-## 📊 Analyse et Conception
+## 📊 Analyse
 
 ### Diagramme de Cas d'Utilisation
 
 ![Use Case Diagram](asses/useCase.png)
+
+---
+
+## Conception
+
+### Diagramme de Classe
+
+![Class Diagram](asses/digrameDeClass.png)
 
 ---
