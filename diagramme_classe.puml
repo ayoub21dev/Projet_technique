@@ -1,36 +1,43 @@
 @startuml
-skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor #E1D5E7
+    BorderColor #5D4037
+    HeaderBackgroundColor #D1C4E9
+    ArrowColor #000000
+    AttributeFontColor #000000
+    AttributeFontSize 13
+}
+
+skinparam linetype ortho
 hide circle
 
 class User {
-  +id : BigInt
-  +name : String
-  +email : String
-  +password : String
-  +role : String
-  +created_at : Timestamp
-  +updated_at : Timestamp
-}
-
-class Ville {
-  +id : BigInt
-  +nom : String
-  +created_at : Timestamp
-  +updated_at : Timestamp
+    +int id
+    +string name
+    +string email
+    +string password
+    +string role
+    +datetime created_at
 }
 
 class Contact {
-  +id : BigInt
-  +nom : String
-  +prenom : String
-  +email : String
-  +telephone : String
-  +photo : String
-  +ville_id : BigInt
-  +created_at : Timestamp
-  +updated_at : Timestamp
+    +int id
+    +string nom
+    +string prenom
+    +string email
+    +string telephone
+    +string photo
+    +int ville_id
+    +datetime created_at
 }
 
-Ville "1" -- "*" Contact : contient >
+class Ville {
+    +int id
+    +string nom
+    +datetime created_at
+}
+
+User "1" --> "0..*" Contact : "creates/manages"
+Contact "0..*" --> "1" Ville : "belongs to"
 
 @enduml

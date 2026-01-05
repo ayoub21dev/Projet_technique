@@ -79,6 +79,6 @@ Messages de succès / erreur
 
 ### Diagramme de Classe
 
-![Class Diagram](asses/digrameDeClass.png)
+![Class Diagram](asses/DigrameDeClas.png)
 
 ---
