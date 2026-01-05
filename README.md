@@ -2,8 +2,8 @@
 marp: true
 ---
 
-
-# Application de gestion de contact
+# Application de gestion de Contacts
+**Contact Management / Filtrage par Ville**
 
 **Présentée par :** Ayoub jalyta  
 **Encadré par :** M. Fouad Essarraj  
@@ -11,15 +11,14 @@ marp: true
 
 ---
 
-
-
 ## 📑 Sommaire
 
 1. [Choix de sujet](#-choix-de-sujet)
 2. [Contexte du Projet](#-contexte-du-projet)
-3. [Analyse des Besoins](#-analyse-des-besoins)
-4. [Analyse ](#-analyse-)
-5. [Conception ](#-conception--design)
+3. [Stack Technique](#-stack-technique)
+4. [Base de Données](#-base-de-données)
+5. [Fonctionnalités Clés](#-fonctionnalités-clés)
+6. [Validation & Sécurité](#-validation--sécurité)
 
 ---
 
@@ -34,14 +33,44 @@ marp: true
 ![2-tup](asses/La-methode-2TUP-6.png)
 
 ---
+## Analyse Technique
 
-## 💡 Analyse des Besoins
+## 🛠️ Stack Technique
 
-L'application doit répondre aux besoins suivants :
+- **Base de données :** MySQL
+- **Framework :** Laravel
+- **Architecture N-tier :** Services
+- **Architecture :** MVC
+- **Moteur de vues :** Blade
+- **AJAX :** Interactivité fluide sans rechargement
+- **Gestion des Images :** Upload et stockage sécurisé
+- **Internationalisation :** Support multilingue de l'interface
+- **Vite :** Optimisation des performances
+- **Preline UI :** Intégration d'un design système moderne
+- **Lucide Library :** Icônes modernes
 
-- **Stockage et gestion** : Permettre l'ajout, la modification et la suppression de contacts
-- **Filtrage par ville** : Implémenter une recherche efficace pour filtrer les contacts selon leur localisation
-- **Interface accessible** : Offrir une interface simple et intuitive pour tous les utilisateurs
-- **Performance** : Assurer une réactivité optimale lors du filtrage et de l'affichage des données
+---
+
+##  Fonctionnalités Clés
+
+- **CRUD Contacts** : Gestion complète des contacts avec photos.
+- **Assignation** : Lier chaque contact à une ville spécifique.
+- **Filtrage Dynamique** : Filtrer les contacts par ville.
+- **Recherche Instantanée** : Trouver un contact rapidement par son nom.
+
+---
+
+## 🔐 Validation & Sécurité
+Validation des champs obligatoires
+Protection CSRF
+Messages de succès / erreur
+
+---
+
+## 📊 Analyse et Conception
+
+### Diagramme de Cas d'Utilisation
+
+![Use Case Diagram](asses/useCase.png)
 
 ---

@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+actor "Visiteur" as Visiteur
+actor "Admin" as Admin
+
+package "Application Gestion de Contacts" {
+    usecase "Consulter la page d'accueil" as UC_Accueil
+    usecase "Voir les détails d'un contact" as UC_Details
+    
+    usecase "Gérer les contacts (CRUD)" as UC_CRUD
+    usecase "Filtrer les contacts par ville" as UC_Filtrer
+    usecase "Rechercher des contacts" as UC_Rechercher
+}
+
+' Relations Visiteur
+Visiteur -- UC_Accueil
+UC_Accueil <.. UC_Details : <<extend>>
+
+' Relations Admin
+Admin -- UC_CRUD
+UC_CRUD <.. UC_Filtrer : <<extend>>
+UC_CRUD <.. UC_Rechercher : <<extend>>
+
+@enduml
