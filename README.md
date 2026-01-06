@@ -10,6 +10,12 @@ marp: true
 **Date :** 05/01/2026
 
 ---
+## la méthode Waterfall
+
+![Waterfall](asses/Waterfall.ebp)
+
+
+---
 
 ## 📑 Sommaire
 
@@ -33,9 +39,9 @@ marp: true
 ![2-tup](asses/La-methode-2TUP-6.png)
 
 ---
-## Analyse Technique
+## Exigences: Analyse Technique
 
-## 🛠️ Stack Technique
+##  Stack Technique
 
 - **Base de données :** MySQL
 - **Framework :** Laravel
@@ -44,6 +50,8 @@ marp: true
 - **Moteur de vues :** Blade
 - **AJAX :** Interactivité fluide sans rechargement
 - **Gestion des Images :** Upload et stockage sécurisé
+
+---
 - **Internationalisation :** Support multilingue de l'interface
 - **Vite :** Optimisation des performances
 - **Preline UI :** Intégration d'un design système moderne
@@ -61,7 +69,7 @@ marp: true
 
 ---
 
-## 📊 Analyse
+## Analyse: Analyse Fonctionnelle
 
 ### Diagramme de Cas d'Utilisation
 
@@ -73,7 +81,7 @@ marp: true
 
 ### Diagramme de Classe
 
-![Class Diagram](asses/DigrameClass.png)
+<img src='./asses/DigrameClass.png' width='200'>
 
 ---
 
