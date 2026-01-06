@@ -36,14 +36,9 @@ class Ville {
     +datetime created_at
 }
 
-' Pivot Table (Hidden conceptually or shown as Association Class)
-class "Ville_Contact" as Pivot {
-  +ville_id
-  +contact_id
-}
 
 User "1" --> "0..*" Contact : "creates/manages"
 Contact "0..*" -- "0..*" Ville : "operates in"
-(Contact, Ville) .. Pivot
+
 
 @enduml
