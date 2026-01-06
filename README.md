@@ -58,12 +58,6 @@ marp: true
 - **Filtrage Dynamique** : Filtrer les contacts par ville.
 - **Recherche Instantanée** : Trouver un contact rapidement par son nom.
 
----
-
-## 🔐 Validation & Sécurité
-Validation des champs obligatoires
-Protection CSRF
-Messages de succès / erreur
 
 ---
 
