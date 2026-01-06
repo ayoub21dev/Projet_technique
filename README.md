@@ -28,7 +28,7 @@ marp: true
 ---
 ## la méthode Waterfall
 
-![Waterfall](asses/Waterfall.ebp)
+![Waterfall](asses/Waterfall.webp)
 
 
 ---
@@ -61,16 +61,6 @@ marp: true
 - **Vite :** Optimisation des performances
 - **Preline UI :** Intégration d'un design système moderne
 - **Lucide Library :** Icônes modernes
-
----
-
-##  Fonctionnalités Clés
-
-- **CRUD Contacts** : Gestion complète des contacts avec photos.
-- **Assignation** : Lier chaque contact à une ville spécifique.
-- **Filtrage Dynamique** : Filtrer les contacts par ville.
-- **Recherche Instantanée** : Trouver un contact rapidement par son nom.
-
 
 ---
 
