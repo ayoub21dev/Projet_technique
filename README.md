@@ -87,5 +87,4 @@ Messages de succès / erreur
 
 - Un bouton "Ajouter Contact" qui ouvre une modale pour créer un nouveau contact.
 - Une barre de recherche filtrant les contacts par nom.
-- Une liste déroulante pour filtrer les contacts par ville.
 
