@@ -9,22 +9,27 @@ marp: true
 **Encadré par :** M. Fouad Essarraj  
 **Date :** 05/01/2026
 
----
-## la méthode Waterfall
-
-![Waterfall](asses/Waterfall.ebp)
 
 
 ---
 
 ## 📑 Sommaire
 
-1. [Choix de sujet](#-choix-de-sujet)
-2. [Contexte du Projet](#-contexte-du-projet)
-3. [Stack Technique](#-stack-technique)
-4. [Base de Données](#-base-de-données)
-5. [Fonctionnalités Clés](#-fonctionnalités-clés)
-6. [Validation & Sécurité](#-validation--sécurité)
+1. [la méthode Waterfall](#-la-méthode-waterfall)
+2. [Choix de sujet](#-choix-de-sujet)
+3. [Contexte du Projet](#-contexte-du-projet)
+4. [Exigences: Analyse Technique](#-exigences-analyse-technique)
+5. [Stack Technique](#-stack-technique)
+6. [Fonctionnalités Clés](#-fonctionnalités-clés)
+7. [Analyse: Analyse Fonctionnelle](#-analyse-analyse-fonctionnelle)
+8. [Conception](#-conception)
+9. [Sujet - Live Coding](#-sujet---live-coding)
+
+---
+## la méthode Waterfall
+
+![Waterfall](asses/Waterfall.ebp)
+
 
 ---
 
