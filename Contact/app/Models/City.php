@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    //
+    protected $fillable = ['nom'];
+
+    public function contacts()
+    {
+        return $this->belongsToMany(Contact::class);
+    }
 }

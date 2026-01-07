@@ -1,4 +1,4 @@
-first_name,last_name,email,phone,city
+prenom,nom,email,telephone,ville
 Ahmed,Alami,ahmed@test.com,0611111111,Casablanca
 Sara,Benani,sara@test.com,0622222222,Rabat
 John,Doe,john@test.com,0633333333,Tanger
