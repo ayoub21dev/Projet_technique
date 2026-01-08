@@ -3,162 +3,81 @@
 @section('header_title', 'Dashboard')
 
 @section('content')
+{{-- Stats Cards --}}
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-  <!-- Card -->
-  <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-800">
-    <div class="p-4 md:p-5 flex gap-x-4">
-      <div class="flex-shrink-0 flex justify-center items-center w-[46px] h-[46px] bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-800/20 dark:text-blue-500">
-        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-
-      <div class="grow">
-        <div class="flex items-center gap-x-2">
-          <p class="text-xs uppercase tracking-wide text-gray-500">
-            Total Contacts
-          </p>
-        </div>
-        <div class="mt-1 flex items-center gap-x-2">
-          <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200">
-            {{ $stats['total_contacts'] }}
-          </h3>
-        </div>
-      </div>
+  <div class="modern-card border border-slate-200/60 shadow-lg rounded-xl p-5 flex gap-x-4">
+    <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-100 to-violet-100 text-blue-600 rounded-lg shadow-sm">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-wide text-slate-500">Total Contacts</p>
+      <h3 class="text-xl font-medium text-slate-800">{{ $stats['total_contacts'] }}</h3>
     </div>
   </div>
-  <!-- End Card -->
 
-  <!-- Card -->
-  <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-800">
-    <div class="p-4 md:p-5 flex gap-x-4">
-      <div class="flex-shrink-0 flex justify-center items-center w-[46px] h-[46px] bg-violet-100 text-violet-600 rounded-lg dark:bg-violet-800/20 dark:text-violet-500">
-        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      </div>
-
-      <div class="grow">
-        <div class="flex items-center gap-x-2">
-          <p class="text-xs uppercase tracking-wide text-gray-500">
-            Active Cities
-          </p>
-        </div>
-        <div class="mt-1 flex items-center gap-x-2">
-          <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200">
-            {{ $stats['total_cities'] }}
-          </h3>
-        </div>
-      </div>
+  <div class="modern-card border border-slate-200/60 shadow-lg rounded-xl p-5 flex gap-x-4">
+    <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-violet-100 to-purple-100 text-violet-600 rounded-lg shadow-sm">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
     </div>
-  </div>
-  <!-- End Card -->
-</div>
-
-<!-- Table -->
-<div class="mt-8 flex flex-col">
-  <div class="-m-1.5 overflow-x-auto">
-    <div class="p-1.5 min-w-full inline-block align-middle">
-      <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
-        <!-- Header -->
-        <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-              Recent Contacts
-            </h2>
-          </div>
-
-          <div>
-            <div class="inline-flex gap-x-2">
-              <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="{{ route('contacts.index') }}">
-                View all
-              </a>
-
-              <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" data-hs-overlay="#create-contact-modal">
-                <svg class="flex-shrink-0 w-3 h-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
-                  <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"/>
-                </svg>
-                Create
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- End Header -->
-
-        <!-- Table -->
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-slate-800 text-left">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-start">
-                <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                  Name
-                </span>
-              </th>
-              <th scope="col" class="px-6 py-3 text-start">
-                <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                  Email
-                </span>
-              </th>
-              <th scope="col" class="px-6 py-3 text-start">
-                <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
-                  Added
-                </span>
-              </th>
-              <th scope="col" class="px-6 py-3 text-end"></th>
-            </tr>
-          </thead>
-
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            @forelse($stats['recent_contacts'] as $contact)
-            <tr>
-              <td class="h-px w-px whitespace-nowrap">
-                <div class="px-6 py-3">
-                  <div class="flex items-center gap-x-3">
-                    @if($contact->photo)
-                        <img class="inline-block h-[38px] w-[38px] rounded-full" src="{{ asset('storage/' . $contact->photo) }}" alt="Image Description">
-                    @else
-                        <span class="inline-flex items-center justify-center h-[38px] w-[38px] rounded-full bg-blue-600">
-                          <span class="text-xs font-medium text-white leading-none">{{ substr($contact->nom, 0, 1) }}</span>
-                        </span>
-                    @endif
-                    <div class="grow">
-                      <span class="block text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $contact->prenom }} {{ $contact->nom }}</span>
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td class="h-px w-px whitespace-nowrap">
-                <div class="px-6 py-3 text-sm text-gray-500">
-                  {{ $contact->email }}
-                </div>
-              </td>
-              <td class="h-px w-px whitespace-nowrap">
-                <div class="px-6 py-3 text-sm text-gray-500">
-                  {{ $contact->created_at->diffForHumans() }}
-                </div>
-              </td>
-              <td class="h-px w-px whitespace-nowrap">
-                <div class="px-6 py-1.5 text-end">
-                  <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-100 text-red-800 hover:bg-red-200 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-red-900 dark:text-red-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" onclick="deleteContact('{{ $contact->id }}')">
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="4" class="px-6 py-20 text-center text-sm text-gray-500">
-                    No contacts yet. Start by creating one!
-                </td>
-            </tr>
-            @endforelse
-          </tbody>
-        </table>
-        <!-- End Table -->
-      </div>
+    <div>
+      <p class="text-xs uppercase tracking-wide text-slate-500">Active Cities</p>
+      <h3 class="text-xl font-medium text-slate-800">{{ $stats['total_cities'] }}</h3>
     </div>
   </div>
 </div>
-<!-- End Table -->
-@include('admin.contacts.create_modal')
-@include('admin.contacts.edit_modal')
-@include('admin.contacts.delete_script')
 
+{{-- Recent Contacts Table --}}
+<div class="mt-8 modern-card border border-slate-200/60 rounded-xl shadow-lg overflow-hidden">
+  <div class="px-6 py-4 flex flex-wrap gap-3 justify-between items-center border-b border-slate-200/60 bg-gradient-to-r from-slate-50 to-white">
+    <h2 class="text-xl font-semibold text-slate-800">Recent Contacts</h2>
+    <div class="flex gap-x-2">
+      <a href="{{ route('contacts.index') }}" class="inline-flex items-center gap-x-2 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">View all</a>
+      <button type="button" data-hs-overlay="#create-contact-modal" class="inline-flex items-center gap-x-2 py-2 px-3 bg-gradient-to-r from-blue-600 to-violet-600 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-violet-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+        Create
+      </button>
+    </div>
+  </div>
+
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-gradient-to-r from-slate-50 to-slate-100">
+      <tr>
+        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Name</th>
+        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Email</th>
+        <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Added</th>
+        <th class="px-6 py-3 text-end"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 bg-white">
+      @forelse($stats['recent_contacts'] as $contact)
+      <tr class="hover:bg-slate-50/50 transition-colors">
+        <td class="px-6 py-3">
+          <div class="flex items-center gap-x-3">
+            @if($contact->photo)
+              <img class="h-10 w-10 rounded-full ring-2 ring-white shadow-sm object-cover" src="{{ asset('storage/'.$contact->photo) }}" alt="">
+            @else
+              <span class="flex items-center justify-center h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 shadow-sm">
+                <span class="text-xs font-medium text-white">{{ substr($contact->nom, 0, 1) }}</span>
+              </span>
+            @endif
+            <span class="text-sm font-semibold text-slate-800">{{ $contact->prenom }} {{ $contact->nom }}</span>
+          </div>
+        </td>
+        <td class="px-6 py-3 text-sm text-slate-600">{{ $contact->email }}</td>
+        <td class="px-6 py-3 text-sm text-slate-600">{{ $contact->created_at->diffForHumans() }}</td>
+        <td class="px-6 py-3 text-end">
+          <button type="button" onclick="deleteContact('{{ $contact->id }}')" class="py-1.5 px-2.5 text-xs font-medium rounded-lg bg-gradient-to-r from-red-100 to-red-200 text-red-800 hover:from-red-200 hover:to-red-300 transition-all">Delete</button>
+        </td>
+      </tr>
+      @empty
+      <tr>
+        <td colspan="4" class="px-6 py-20 text-center text-sm text-slate-500">No contacts yet. Start by creating one!</td>
+      </tr>
+      @endforelse
+    </tbody>
+  </table>
+</div>
+
+@include('admin.contacts._modals')
+@include('admin.contacts._scripts')
 @endsection

@@ -10,77 +10,88 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    protected $contactService;
+    public function __construct(protected ContactService $contactService) {}
 
-    public function __construct(ContactService $contactService)
+    public function index(Request $request)
     {
-        $this->contactService = $contactService;
-    }
-
-    public function index()
-    {
-        $contacts = $this->contactService->getAll();
-        $cities = City::all();
-        return view('admin.contacts.index', compact('contacts', 'cities'));
-    }
-
-    public function create()
-    {
-        $cities = City::all();
-        return view('admin.contacts.create', compact('cities'));
+        $search = $request->input('search', '');
+        $cityFilter = (array) $request->input('cities', []);
+        
+        $contacts = ($search || $cityFilter) 
+            ? $this->contactService->filterByCity($cityFilter, $search)
+            : $this->contactService->getAll();
+        
+        return view('admin.contacts.index', [
+            'contacts' => $contacts,
+            'cities' => City::all(),
+            'search' => $search,
+            'cityFilter' => $cityFilter
+        ]);
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telephone' => 'required|string|max:20',
-            'photo' => 'nullable|image|max:2048',
-            'cities' => 'nullable|array',
-            'cities.*' => 'exists:cities,id',
-        ]);
-
+        $data = $this->validateContact($request);
         $contact = $this->contactService->create($data);
 
-        if ($request->ajax() || $request->wantsJson()) {
-            // Need to load relationships for display
+        if ($request->ajax()) {
             $contact->load('cities', 'user');
-            
             return response()->json([
                 'success' => true,
-                'message' => 'Contact created successfully.',
                 'html' => view('admin.contacts.row', compact('contact'))->render()
             ]);
         }
 
-        return redirect()->route('contacts.index')->with('success', 'Contact created successfully.');
+        return redirect()->route('contacts.index')->with('success', 'Contact created.');
     }
 
     public function edit(Contact $contact)
     {
-        // Security check: non-admin users can only edit their own contacts
-        if (auth()->user()->role !== 'admin' && $contact->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        $this->authorizeContact($contact);
+        
         if (request()->wantsJson()) {
             return response()->json($contact->load('cities'));
         }
 
-        $cities = City::all();
-        return view('admin.contacts.edit', compact('contact', 'cities'));
+        return view('admin.contacts.index', [
+            'contact' => $contact,
+            'cities' => City::all()
+        ]);
     }
 
     public function update(Request $request, Contact $contact)
     {
-        // Security check: non-admin users can only update their own contacts
-        if (auth()->user()->role !== 'admin' && $contact->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
+        $this->authorizeContact($contact);
+        $data = $this->validateContact($request);
+        $this->contactService->update($contact, $data);
+
+        if ($request->ajax()) {
+            $contact->refresh()->load('cities', 'user');
+            return response()->json([
+                'success' => true,
+                'contact' => $contact,
+                'html' => view('admin.contacts.row', compact('contact'))->render()
+            ]);
         }
 
-        $data = $request->validate([
+        return redirect()->route('contacts.index')->with('success', 'Contact updated.');
+    }
+
+    public function destroy(Contact $contact)
+    {
+        $this->authorizeContact($contact);
+        $this->contactService->delete($contact);
+
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('contacts.index')->with('success', 'Contact deleted.');
+    }
+
+    private function validateContact(Request $request): array
+    {
+        return $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -89,46 +100,12 @@ class ContactController extends Controller
             'cities' => 'nullable|array',
             'cities.*' => 'exists:cities,id',
         ]);
-
-        $this->contactService->update($contact, $data);
-
-        if ($request->ajax() || $request->wantsJson()) {
-             $contact->refresh()->load('cities', 'user');
-             return response()->json([
-                 'success' => true,
-                 'contact' => $contact, // return contact to get ID in JS
-                 'html' => view('admin.contacts.row', compact('contact'))->render()
-             ]);
-        }
-
-        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully.');
     }
 
-    public function destroy(Contact $contact)
+    private function authorizeContact(Contact $contact): void
     {
-        \Illuminate\Support\Facades\Log::info('Destroy method hit for contact ID: ' . $contact->id);
-
-        // Security check: non-admin users can only delete their own contacts
         if (auth()->user()->role !== 'admin' && $contact->user_id !== auth()->id()) {
-            \Illuminate\Support\Facades\Log::warning('Unauthorized delete attempt by user ID: ' . auth()->id());
-            abort(403, 'Unauthorized action.');
+            abort(403);
         }
-
-        try {
-            $this->contactService->delete($contact);
-            \Illuminate\Support\Facades\Log::info('Contact deleted successfully.');
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error deleting contact: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Server Error'], 500);
-        }
-
-        if (request()->ajax() || request()->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Contact deleted successfully.'
-            ]);
-        }
-
-        return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
     }
 }

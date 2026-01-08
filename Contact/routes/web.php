@@ -1,17 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\CityController;
 
+// Public
 Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/directory', [PublicController::class, 'directory'])->name('public.directory');
 
-// Auth Routes
+// Auth (guests only)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -21,15 +21,12 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Protected Admin Routes
+// Admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('contacts', ContactController::class);
-    Route::resource('cities', CityController::class);
+    Route::resource('contacts', ContactController::class)->except(['create', 'show']);
+    Route::resource('cities', CityController::class)->only(['index', 'store', 'destroy']);
 });
 
-// Alias for dashboard
-Route::get('/dashboard', function() {
-    return redirect()->route('dashboard');
-})->middleware('auth');
-
+// Dashboard redirect
+Route::redirect('/dashboard', '/admin/dashboard')->middleware('auth');

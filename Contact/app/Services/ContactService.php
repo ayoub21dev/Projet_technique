@@ -9,107 +9,108 @@ use Illuminate\Support\Facades\Storage;
 class ContactService
 {
     /**
-     * Get all contacts for the authenticated user (or all contacts if admin).
+     * Retrieve all contacts for the current user, or all contacts if the user is an admin.
+     * Results are ordered by name (nom).
      */
     public function getAll()
     {
-        $query = Contact::with('cities', 'user');
-        
-        // If not admin, only show user's own contacts
-        if (Auth::user()->role !== 'admin') {
-            $query->where('user_id', Auth::id());
-        }
-        
-        return $query->orderBy('nom')->get();
+        return $this->baseQuery()->orderBy('nom')->get();
     }
 
     /**
-     * Create a new contact and sync cities.
+     * Create a new contact, associate it with the current user,
+     * handle photo upload, and sync city relationships.
      */
     public function create(array $data)
     {
         $data['user_id'] = Auth::id();
-
-        if (isset($data['photo']) && $data['photo'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['photo'] = $data['photo']->store('contacts', 'public');
-        }
-
+        $data = $this->handlePhoto($data);
         $contact = Contact::create($data);
-
-        if (isset($data['cities'])) {
-            $contact->cities()->sync($data['cities']);
-        }
-
+        $this->syncCities($contact, $data);
         return $contact;
     }
 
     /**
-     * Update an existing contact.
+     * Update an existing contact's details, update its photo if provided,
+     * and re-sync city relationships.
      */
     public function update(Contact $contact, array $data)
     {
-        if (isset($data['photo']) && $data['photo'] instanceof \Illuminate\Http\UploadedFile) {
-            // Delete old photo if exists
-            if ($contact->photo) {
-                Storage::disk('public')->delete($contact->photo);
-            }
-            $data['photo'] = $data['photo']->store('contacts', 'public');
-        }
-
+        $data = $this->handlePhoto($data, $contact);
         $contact->update($data);
-
-        if (isset($data['cities'])) {
-            $contact->cities()->sync($data['cities']);
-        }
-
+        $this->syncCities($contact, $data);
         return $contact;
     }
 
     /**
-     * Delete a contact and its associated photo.
+     * Delete a contact and its associated photo file from storage.
      */
     public function delete(Contact $contact)
     {
         if ($contact->photo) {
             Storage::disk('public')->delete($contact->photo);
         }
-        
         return $contact->delete();
     }
 
     /**
-     * Find a contact by ID (ensuring it belongs to the user, unless admin).
+     * Search and filter contacts based on selected cities and/or a search string.
+     * The search string checks name, email, and phone fields.
      */
-    public function getById($id)
+    public function filterByCity(array $cityIds = [], ?string $searchTerm = null)
     {
-        $query = Contact::with('cities', 'user');
+        $query = $this->baseQuery();
         
-        // If not admin, only allow access to user's own contacts
-        if (Auth::user()->role !== 'admin') {
-            $query->where('user_id', Auth::id());
+        if (!empty($cityIds)) {
+            $query->whereHas('cities', fn($q) => $q->whereIn('cities.id', $cityIds));
         }
         
-        return $query->findOrFail($id);
+        if ($searchTerm) {
+            $query->where(fn($q) => $q
+                ->where('nom', 'like', "%{$searchTerm}%")
+                ->orWhere('prenom', 'like', "%{$searchTerm}%")
+                ->orWhere('email', 'like', "%{$searchTerm}%")
+                ->orWhere('telephone', 'like', "%{$searchTerm}%")
+            );
+        }
+        
+        return $query->orderBy('nom')->get();
     }
 
     /**
-     * Search contacts by name, email, or telephone.
+     * Define the base query for contacts, including relationships and 
+     * restricting access based on user role (admins see everything, users see only theirs).
      */
-    public function search($term)
+    private function baseQuery()
     {
         $query = Contact::with('cities', 'user');
-        
-        // If not admin, only search user's own contacts
         if (Auth::user()->role !== 'admin') {
             $query->where('user_id', Auth::id());
         }
-        
-        return $query->where(function ($q) use ($term) {
-                $q->where('nom', 'like', "%{$term}%")
-                    ->orWhere('prenom', 'like', "%{$term}%")
-                    ->orWhere('email', 'like', "%{$term}%")
-                    ->orWhere('telephone', 'like', "%{$term}%");
-            })
-            ->get();
+        return $query;
+    }
+
+    /**
+     * Process an uploaded photo: delete the old one if it exists and store the new one.
+     */
+    private function handlePhoto(array $data, ?Contact $contact = null): array
+    {
+        if (isset($data['photo']) && $data['photo'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($contact?->photo) {
+                Storage::disk('public')->delete($contact->photo);
+            }
+            $data['photo'] = $data['photo']->store('contacts', 'public');
+        }
+        return $data;
+    }
+
+    /**
+     * Synchronize the many-to-many relationship between the contact and cities.
+     */
+    private function syncCities(Contact $contact, array $data): void
+    {
+        if (isset($data['cities'])) {
+            $contact->cities()->sync($data['cities']);
+        }
     }
 }
