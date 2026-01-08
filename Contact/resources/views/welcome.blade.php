@@ -13,7 +13,7 @@
   <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
     <!-- Announcement Banner -->
     <div class="flex justify-center">
-      <a class="inline-flex items-center gap-x-2 bg-white border border-gray-200 text-sm text-gray-800 p-1 px-3 rounded-full transition hover:border-gray-300 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:hover:border-gray-600 outline-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900" href="#">
+      <a class="inline-flex items-center gap-x-2 bg-white border border-gray-200 text-sm text-gray-800 p-1 px-3 rounded-full transition hover:border-gray-300 outline-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white" href="#">
         Explore our new features
         <span class="py-1.5 px-2.5 inline-flex justify-center items-center gap-x-1.5 bg-gray-200 font-semibold text-gray-600 text-[11px] rounded-full dark:bg-gray-800 dark:text-gray-400">
           <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -26,7 +26,7 @@
 
     <!-- Title -->
     <div class="mt-5 max-w-2xl text-center mx-auto">
-      <h1 class="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl dark:text-gray-200">
+      <h1 class="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl">
         Professional Contact 
         <span class="bg-clip-text bg-gradient-to-tl from-blue-600 to-violet-600 text-transparent">Management</span>
       </h1>
@@ -34,20 +34,20 @@
     <!-- End Title -->
 
     <div class="mt-5 max-w-3xl text-center mx-auto">
-      <p class="text-lg text-gray-600 dark:text-gray-400">Organize your professional network with ease. Custom tags, location filtering, and beautiful profiles for all your connections.</p>
+      <p class="text-lg text-gray-600">Organize your professional network with ease. Custom tags, location filtering, and beautiful profiles for all your connections.</p>
     </div>
 
     <!-- Buttons -->
     <div class="mt-8 gap-3 flex justify-center">
       @auth
-        <a class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white py-3 px-4 dark:focus:ring-offset-gray-800 transition-all duration-300" href="{{ route('dashboard') }}">
+        <a class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white py-3 px-4 transition-all duration-300" href="{{ route('dashboard') }}">
           Go to Dashboard
           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
           </svg>
         </a>
       @else
-        <a class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white py-3 px-4 dark:focus:ring-offset-gray-800 transition-all duration-300" href="{{ route('register') }}">
+        <a class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white py-3 px-4 transition-all duration-300" href="{{ route('register') }}">
           Start Now
           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -62,19 +62,14 @@
 
 <!-- Search & Filter Section -->
 <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 mx-auto" id="directory-section">
-  <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-7 dark:bg-slate-900 dark:border-gray-700">
-    <form action="{{ route('home') }}#directory-section" method="GET">
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        <!-- Search Input -->
-        <div class="relative">
-          <input type="text" name="search" value="{{ request('search') }}" class="py-3 px-4 ps-11 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="Search by name or email">
+  <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-7">
           <div class="absolute top-0 bottom-0 start-0 flex items-center pointer-events-none ps-4">
             <svg class="flex-shrink-0 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
         </div>
 
         <!-- City Dropdown -->
-        <select name="city" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+        <select name="city" class="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500">
           <option value="">All Cities</option>
           @foreach($cities as $city)
             <option value="{{ $city->id }}" {{ request('city') == $city->id ? 'selected' : '' }}>{{ $city->nom }}</option>
@@ -92,7 +87,7 @@
   <!-- Contacts Grid -->
   <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
     @forelse($contacts as $contact)
-    <div class="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+    <div class="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
       <div class="h-52 flex flex-col justify-center items-center bg-blue-600 rounded-t-xl overflow-hidden">
         @if($contact->photo)
             <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" src="{{ asset('storage/' . $contact->photo) }}" alt="Contact Photo">
@@ -101,7 +96,7 @@
         @endif
       </div>
       <div class="p-4 md:p-6 text-center">
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:hover:text-white">
+        <h3 class="text-xl font-semibold text-gray-800">
           {{ $contact->prenom }} {{ $contact->nom }}
         </h3>
         <p class="mt-3 text-gray-500">
@@ -109,7 +104,7 @@
         </p>
         <div class="mt-4 flex flex-wrap justify-center gap-1">
             @foreach($contact->cities as $city)
-                <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500">
+                <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     {{ $city->nom }}
                 </span>
             @endforeach
