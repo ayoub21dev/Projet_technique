@@ -1,21 +1,21 @@
-prenom,nom,email,telephone,ville
-Ahmed,Alami,ahmed@test.com,0611111111,Casablanca
-Sara,Benani,sara@test.com,0622222222,Rabat
-John,Doe,john@test.com,0633333333,Tanger
-Karim,Idrissi,karim@test.com,0644444444,Casablanca
-Omar,Fassi,omar@test.com,0655555555,Marrakech
-Fatima,Zahra,fatima@test.com,0666666666,Fès
-Youssef,Mansouri,youssef@test.com,0677777777,Agadir
-Laila,Tazi,laila@test.com,0688888888,Meknès
-Mehdi,Chraibi,mehdi@test.com,0699999999,Kenitra
-Salma,Berrada,salma@test.com,0600000000,Tétouan
-Driss,Alaoui,driss@test.com,0612345678,Safi
-Amine,Najid,amine@test.com,0623456789,Mohammédia
-Zineb,Lahlou,zineb@test.com,0634567890,El Jadida
-Hassan,Raji,hassan@test.com,0645678901,Béni Mellal
-Meryem,Ait,meryem@test.com,0656789012,Nador
-Khalid,Jabri,khalid@test.com,0667890123,Taza
-Noura,Saidi,noura@test.com,0678901234,Settat
-Adil,Hamdi,adil@test.com,0689012345,Khouribga
-Yasmine,Bennis,yasmine@test.com,0690123456,Temara
-Tarik,Kabbaj,tarik@test.com,0601234567,Khemisset
+prenom,nom,email,telephone,user_email,ville
+Ahmed,Alami,ahmed@test.com,0611111111,admin@connecthub.com,Casablanca
+Sara,Benani,sara@test.com,0622222222,admin@connecthub.com,Rabat
+John,Doe,john@test.com,0633333333,admin@connecthub.com,Marrakech
+Karim,Idrissi,karim@test.com,0644444444,user1@test.com,Tanger
+Omar,Fassi,omar@test.com,0655555555,user1@test.com,Agadir
+Fatima,Zahra,fatima@test.com,0666666666,user2@test.com,Fès
+Youssef,Mansouri,youssef@test.com,0677777777,user2@test.com,Meknès
+Laila,Tazi,laila@test.com,0688888888,john@example.com,Oujda
+Mehdi,Chraibi,mehdi@test.com,0699999999,john@example.com,Kenitra
+Salma,Berrada,salma@test.com,0600000000,jane@example.com,Tétouan
+Driss,Alaoui,driss@test.com,0612345678,jane@example.com,Safi
+Amine,Najid,amine@test.com,0623456789,ayoub@test.com,Mohammédia
+Zineb,Lahlou,zineb@test.com,0634567890,ayoub@test.com,El Jadida
+Hassan,Raji,hassan@test.com,0645678901,solicode@test.com,Béni Mellal
+Meryem,Ait,meryem@test.com,0656789012,solicode@test.com,Nador
+Khalid,Jabri,khalid@test.com,0667890123,manager@test.com,Taza
+Noura,Saidi,noura@test.com,0678901234,manager@test.com,Settat
+Adil,Hamdi,adil@test.com,0689012345,demo@test.com,Khouribga
+Yasmine,Bennis,yasmine@test.com,0690123456,demo@test.com,Temara
+Tarik,Kabbaj,tarik@test.com,0601234567,guest@test.com,Khemisset

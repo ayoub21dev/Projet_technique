@@ -1,5 +1,5 @@
 name,email,password,role
-Admin User,admin@test.com,password,admin
+Admin User,admin@connecthub.com,Admin@2026,admin
 User One,user1@test.com,password,user
 User Two,user2@test.com,password,user
 John Doe,john@example.com,password,user

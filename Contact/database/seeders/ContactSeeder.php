@@ -23,16 +23,6 @@ class ContactSeeder extends Seeder
             return;
         }
 
-        $user = User::first();
-        if (!$user) {
-            $user = User::create([
-                'name' => 'Admin User',
-                'email' => 'admin@connecthub.com',
-                'password' => bcrypt('password'),
-                'role' => 'admin',
-            ]);
-        }
-
         $csvData = array_map('str_getcsv', file($csvPath));
         $header = array_shift($csvData);
 
@@ -43,7 +33,16 @@ class ContactSeeder extends Seeder
             $cityName = trim($data['ville']);
             $city = City::firstOrCreate(['nom' => $cityName]);
 
-            // 2. Manage Contact
+            // 2. Find Owner User
+            $ownerEmail = $data['owner_email'] ?? 'admin@test.com';
+            $user = User::where('email', $ownerEmail)->first();
+            
+            if (!$user) {
+                // Fallback to first user or create a default if absolutely needed
+                $user = User::first();
+            }
+
+            // 3. Manage Contact
             $contact = Contact::updateOrCreate(
                 ['email' => $data['email']], // Unique criteria
                 [
@@ -54,7 +53,7 @@ class ContactSeeder extends Seeder
                 ]
             );
 
-            // 3. Sync City
+            // 4. Sync City
             $contact->cities()->sync([$city->id]);
         }
 
