@@ -34,7 +34,7 @@ class ContactSeeder extends Seeder
             $city = City::firstOrCreate(['nom' => $cityName]);
 
             // 2. Find Owner User
-            $ownerEmail = $data['owner_email'] ?? 'admin@test.com';
+            $ownerEmail = $data['user_email'] ?? 'admin@connecthub.com';
             $user = User::where('email', $ownerEmail)->first();
             
             if (!$user) {
@@ -49,6 +49,7 @@ class ContactSeeder extends Seeder
                     'prenom' => $data['prenom'],
                     'nom' => $data['nom'],
                     'telephone' => $data['telephone'],
+                    'photo' => $data['photo'] ?? null,
                     'user_id' => $user->id,
                 ]
             );
