@@ -29,18 +29,17 @@ class ContactSeeder extends Seeder
         foreach ($csvData as $row) {
             $data = array_combine($header, $row);
             
-            // 1. Manage City
-            $cityName = trim($data['ville']);
-            $city = City::firstOrCreate(['nom' => $cityName]);
+            // 1. Manage City (Handle Multiple Cities)
+            $cityNames = explode('|', $data['ville']);
+            $cityIds = [];
+            foreach ($cityNames as $cityName) {
+                $city = City::firstOrCreate(['nom' => trim($cityName)]);
+                $cityIds[] = $city->id;
+            }
 
             // 2. Find Owner User
             $ownerEmail = $data['user_email'] ?? 'admin@connecthub.com';
-            $user = User::where('email', $ownerEmail)->first();
-            
-            if (!$user) {
-                // Fallback to first user or create a default if absolutely needed
-                $user = User::first();
-            }
+            $user = User::where('email', $ownerEmail)->first() ?: User::first();
 
             // 3. Manage Contact
             $contact = Contact::updateOrCreate(
@@ -54,8 +53,8 @@ class ContactSeeder extends Seeder
                 ]
             );
 
-            // 4. Sync City
-            $contact->cities()->sync([$city->id]);
+            // 4. Sync Cities
+            $contact->cities()->sync($cityIds);
         }
 
         $this->command->info('Contacts imported successfully from CSV!');

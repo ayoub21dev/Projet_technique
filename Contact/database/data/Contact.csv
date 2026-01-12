@@ -1,11 +1,11 @@
 prenom,nom,email,telephone,user_email,ville,photo
-Ahmed,Alami,ahmed@test.com,0611111111,admin@connecthub.com,Casablanca,contacts/ahmed.jpg
-Sara,Benani,sara@test.com,0622222222,admin@connecthub.com,Rabat,contacts/sara.jpg
+Ahmed,Alami,ahmed@test.com,0611111111,admin@connecthub.com,Casablanca|Rabat,contacts/ahmed.jpg
+Sara,Benani,sara@test.com,0622222222,admin@connecthub.com,Rabat|Marrakech,contacts/sara.jpg
 John,Doe,john@test.com,0633333333,admin@connecthub.com,Marrakech,contacts/john.jpg
-Karim,Idrissi,karim@test.com,0644444444,user1@test.com,Tanger,contacts/karim.jpg
+Karim,Idrissi,karim@test.com,0644444444,user1@test.com,Tanger|Agadir,contacts/karim.jpg
 Omar,Fassi,omar@test.com,0655555555,user1@test.com,Agadir,contacts/omar.jpg
-Fatima,Zahra,fatima@test.com,0666666666,user2@test.com,Fès,contacts/fatima.jpg
+Fatima,Zahra,fatima@test.com,0666666666,user2@test.com,Fès|Meknès,contacts/fatima.jpg
 Youssef,Mansouri,youssef@test.com,0677777777,user2@test.com,Meknès,contacts/youssef.jpg
-Laila,Tazi,laila@test.com,0688888888,john@example.com,Oujda,contacts/laila.jpg
+Laila,Tazi,laila@test.com,0688888888,john@example.com,Oujda|Kenitra,contacts/laila.jpg
 Mehdi,Chraibi,mehdi@test.com,0699999999,john@example.com,Kenitra,contacts/mehdi.jpg
 Salma,Berrada,salma@test.com,0600000000,jane@example.com,Tétouan,contacts/salma.jpg
