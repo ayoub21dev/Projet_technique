@@ -1,11 +1,19 @@
 Analyze this ContactService.php class and write a comprehensive Laravel Feature Test for it.
 
-1. **Setup**: Use RefreshDatabase. Seed UserSeeder and ContactSeeder in setUp().
-2. **Roles**: 
-   - Assert admin@connecthub.com sees 10 contacts.
-   - Assert user1@test.com sees 2 contacts.
-3. **Storage**: Mock public disk. 
-   - **Update**: Assert old photo is deleted and new photo exists.
-   - **Delete**: Assert photo is removed from storage on deletion.
-4. **Filtering**: Test filterByCity using: City ID, Search term, and both combined.
-5. **Constraint**: Do NOT test the create method.
+Requirements:
+
+-   **Setup**:
+    -   Use `RefreshDatabase`.
+    -   Seed `UserSeeder` and `ContactSeeder` in `setUp()`.
+-   **Roles**:
+    -   **Admin**: Must see all 10 contacts.
+    -   **User**: Must see only their 2 contacts.
+-   **Storage**: Mock the `public` disk.
+    -   **Update**: Verify the old photo is replaced.
+    -   **Delete**: Verify the photo is removed from storage.
+-   **Filtering**: Test `filterByCity` with: City ID, Search term, and both combined.
+-   **Rules**:
+    -   Do NOT test the create method.
+    -   Use `test_` prefixes.
+    -   Ensure clean code and standard assertions.
+    
