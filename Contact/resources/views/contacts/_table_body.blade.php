@@ -27,22 +27,8 @@
                 </span>
             @endforeach
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium space-x-2">
-            <button type="button" 
-                class="edit-btn inline-flex items-center gap-x-1.5 text-blue-600 hover:text-blue-800 focus:outline-none"
-                data-id="{{ $contact->id }}"
-                data-nom="{{ $contact->nom }}"
-                data-prenom="{{ $contact->prenom }}"
-                data-email="{{ $contact->email }}"
-                data-telephone="{{ $contact->telephone }}"
-                data-cities="{{ json_encode($contact->cities->pluck('id')) }}">
-                Modifier
-            </button>
-            <button type="button" 
-                class="delete-btn inline-flex items-center gap-x-1.5 text-red-600 hover:text-red-800 focus:outline-none"
-                data-id="{{ $contact->id }}">
-                Supprimer
-            </button>
+        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+            <!-- No Actions for prototype -->
         </td>
     </tr>
 @empty
