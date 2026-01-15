@@ -91,7 +91,7 @@
     </div>
     @empty
     <div class="col-span-full text-center py-10">
-      <p class="text-gray-500">No contacts found matching your criteria.</p>
+      <p class="text-gray-500">Nu contacts found matching your criteria.</p>
     </div>
     @endforelse
   </div>

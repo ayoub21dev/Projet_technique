@@ -23,7 +23,8 @@ class ContactService
      */
     public function create(array $data)
     {
-        $data['user_id'] = Auth::id();
+        // For prototype: use authenticated user or fallback to first user in DB
+        $data['user_id'] = Auth::id() ?? \App\Models\User::first()?->id;
         $data = $this->handlePhoto($data);
         $contact = Contact::create($data);
         $this->syncCities($contact, $data);
@@ -84,7 +85,8 @@ class ContactService
     private function baseQuery()
     {
         $query = Contact::with('cities', 'user');
-        if (Auth::user()->role !== 'admin') {
+        // In prototype: if guest, show all. If logged in and not admin, show only own contacts.
+        if (Auth::check() && Auth::user()->role !== 'admin') {
             $query->where('user_id', Auth::id());
         }
         return $query;
