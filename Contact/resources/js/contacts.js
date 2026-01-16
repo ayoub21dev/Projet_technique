@@ -1,9 +1,11 @@
 const table = document.getElementById('contacts-table');
 const modal = document.getElementById('contactModal');
 
-// 1. Recherche
+// 1. Recherche 
 document.getElementById('search')?.addEventListener('input', e => {
-    fetch(`${window.CONTACT_ROUTES.search}?query=${e.target.value}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    fetch(`${window.CONTACT_ROUTES.index}?query=${e.target.value}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
         .then(r => r.text())
         .then(html => table.innerHTML = html);
 });
@@ -14,20 +16,18 @@ document.getElementById('contactForm')?.addEventListener('submit', e => {
     fetch(e.target.action, {
         method: 'POST',
         body: new FormData(e.target),
-        headers: { 
-            'X-Requested-With': 'XMLHttpRequest', 
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         }
     })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
+        .then(r => r.text()) // Controller returns view('...').render() which is HTML
+        .then(html => {
+            table.innerHTML = html;
             modal.classList.add('hidden');
             e.target.reset();
-            document.getElementById('success-msg').innerText = data.message;
-            document.getElementById('search').dispatchEvent(new Event('input'));
-        }
-    });
+            document.getElementById('success-msg').innerText = "Contact créé !";
+        });
 });
 
 // 3. Modal
