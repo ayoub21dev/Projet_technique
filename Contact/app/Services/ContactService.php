@@ -84,7 +84,7 @@ class ContactService
     private function baseQuery()
     {
         $query = Contact::with('cities', 'user');
-        if (Auth::user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
             $query->where('user_id', Auth::id());
         }
         return $query;
