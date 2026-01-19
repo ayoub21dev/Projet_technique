@@ -22,8 +22,15 @@ class CitySeeder extends Seeder
 
         $csvData = array_map('str_getcsv', file($csvPath));
         $header = array_shift($csvData);
+        
+        // Sanitize header to remove BOM or whitespace
+        $header = array_map('trim', $header);
 
         foreach ($csvData as $row) {
+            if (count($row) !== count($header)) {
+                continue;
+            }
+
             $data = array_combine($header, $row);
 
             City::firstOrCreate([

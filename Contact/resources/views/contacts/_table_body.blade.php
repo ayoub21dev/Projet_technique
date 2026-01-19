@@ -33,8 +33,8 @@
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
             <div class="flex justify-end gap-3 font-semibold">
-                <button type="button" class="text-indigo-600 hover:text-indigo-900 transition-colors">Edite</button>
-                <button type="button" class="text-red-600 hover:text-red-900 transition-colors">Supremmer</button>
+                <button type="button" class="edit-btn text-indigo-600 hover:text-indigo-900 transition-colors" data-id="{{ $contact->id }}">Edite</button>
+                <button type="button" class="delete-btn text-red-600 hover:text-red-900 transition-colors" data-id="{{ $contact->id }}">Supremmer</button>
             </div>
         </td>
     </tr>

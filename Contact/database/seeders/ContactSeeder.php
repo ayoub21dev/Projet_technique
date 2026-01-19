@@ -16,7 +16,7 @@ class ContactSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvPath = database_path('data/Contact.csv');
+        $csvPath = database_path('data/contact.csv');
         
         if (!File::exists($csvPath)) {
             $this->command->error("CSV file not found at: $csvPath");
@@ -26,7 +26,14 @@ class ContactSeeder extends Seeder
         $csvData = array_map('str_getcsv', file($csvPath));
         $header = array_shift($csvData);
 
+        // Sanitize header to remove BOM or whitespace
+        $header = array_map('trim', $header);
+
         foreach ($csvData as $row) {
+            if (count($row) !== count($header)) {
+                continue;
+            }
+            
             $data = array_combine($header, $row);
             
             // 1. Manage City (Handle Multiple Cities)

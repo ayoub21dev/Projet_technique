@@ -37,9 +37,16 @@
 
     @include('contacts._modal')
 
+    <script>
+        window.CONTACT_ROUTES = {
+            index: "{{ route('contacts.index') }}",
+            store: "{{ route('contacts.store') }}",
+            update: "{{ url('contacts') }}",
+            destroy: "{{ url('contacts') }}",
+            editData: "{{ url('contacts') }}"
+        };
+    </script>
     @push('scripts')
-        <script>     window.CONTACT_ROUTES = {         index: "{{ route('contacts.index') }}",         store: "{{ route('contacts.store') }}"     };
-        </script>
         @vite('resources/js/contacts.js')
     @endpush
 @endsection
