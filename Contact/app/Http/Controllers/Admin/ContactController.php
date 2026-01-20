@@ -21,6 +21,10 @@ class ContactController extends Controller
             ? $this->contactService->filterByCity($cityFilter, $search)
             : $this->contactService->getAll();
         
+        if ($request->ajax()) {
+            return view('admin.contacts.rows', compact('contacts'))->render();
+        }
+
         return view('admin.contacts.index', [
             'contacts' => $contacts,
             'cities' => City::all(),

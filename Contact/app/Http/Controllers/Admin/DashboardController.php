@@ -9,25 +9,43 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        // Admins see all contacts, regular users see only their own
-        $contactQuery = Auth::user()->role === 'admin' 
-            ? Contact::query() 
-            : Contact::where('user_id', Auth::id());
+    public function __construct(protected \App\Services\ContactService $contactService) {}
 
+    public function index(\Illuminate\Http\Request $request)
+    {
+        $search = $request->input('search');
+        
+        // If searching, use the filter service. Otherwise, get recent 5.
+        // Note: The user might want *all* contacts if they are scrolling/paginating, 
+        // but for now let's stick to: Search -> Found results; No Search -> Recent 5.
+        
+        if ($search) {
+            $contacts = $this->contactService->filterByCity([], $search);
+        } else {
+            // Replicate the 'recent' logic but we need it as a collection for the view
+            $contactQuery = Auth::user()->role === 'admin' 
+                ? Contact::query() 
+                : Contact::where('user_id', Auth::id());
+            
+            $contacts = $contactQuery->with('cities', 'user')->latest()->limit(5)->get();
+        }
+
+        if ($request->ajax()) {
+            return view('admin.contacts.rows', compact('contacts'))->render();
+        }
+
+        // Stats logic (keep existing stats)
+        $totalQuery = Auth::user()->role === 'admin' ? Contact::query() : Contact::where('user_id', Auth::id());
         $stats = [
-            'total_contacts' => (clone $contactQuery)->count(),
+            'total_contacts' => $totalQuery->count(),
             'total_cities' => City::count(),
-            'recent_contacts' => (clone $contactQuery)
-                ->with('cities', 'user')
-                ->latest()
-                ->limit(5)
-                ->get(),
         ];
 
-        $cities = City::all();
-
-        return view('admin.dashboard', compact('stats', 'cities'));
+        return view('admin.dashboard', [
+            'stats' => $stats, 
+            'contacts' => $contacts,
+            'cities' => City::all(),
+            'search' => $search
+        ]);
     }
 }

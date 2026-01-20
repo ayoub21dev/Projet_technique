@@ -15,6 +15,7 @@
               {{ Auth::user()->role === 'admin' ? 'Manage all contacts across the system.' : 'Manage your personal network.' }}
             </p>
           </div>
+          <div id="success-msg" class="text-emerald-600 font-medium h-6"></div>
           <button type="button" data-hs-overlay="#create-contact-modal" class="inline-flex items-center gap-x-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
             Add contact
@@ -23,8 +24,8 @@
 
         {{-- Search & Filter --}}
         <div class="px-6 py-4 border-b border-slate-200/60 bg-slate-50/50">
-          <form method="GET" action="{{ route('contacts.index') }}" class="flex items-center gap-3">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search by name, email, or phone..." class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+          <form id="search-form" method="GET" action="{{ route('contacts.index') }}" class="flex items-center gap-3">
+            <input type="text" id="search-input" name="search" value="{{ $search }}" placeholder="Search by name, email, or phone..." class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
 
             <div class="relative">
               <button type="button" id="cityDropdownButton" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors flex items-center gap-2 min-w-[160px]">
@@ -69,14 +70,8 @@
               <th class="px-6 py-3 text-end"></th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-200 bg-white">
-            @forelse($contacts as $contact)
-              @include('admin.contacts.row', ['contact' => $contact])
-            @empty
-            <tr>
-              <td colspan="{{ Auth::user()->role === 'admin' ? '5' : '4' }}" class="px-6 py-20 text-center text-sm text-slate-500">No contacts found.</td>
-            </tr>
-            @endforelse
+          <tbody id="contacts-table-body" class="divide-y divide-slate-200 bg-white">
+            @include('admin.contacts.rows')
           </tbody>
         </table>
       </div>
@@ -85,5 +80,5 @@
 </div>
 
 @include('admin.contacts._modals')
-@include('admin.contacts._scripts')
+@vite(['resources/js/contact.js'])
 @endsection

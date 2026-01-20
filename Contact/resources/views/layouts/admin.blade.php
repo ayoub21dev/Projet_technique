@@ -32,6 +32,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
     </style>
+    <script>
+        window.CONTACT_ROUTES = {
+            index: "{{ route('contacts.index') }}",
+            store: "{{ route('contacts.store') }}"
+        };
+    </script>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 h-full">
   <!-- Navigation Toggle -->
