@@ -58,7 +58,7 @@ class ContactService
      * Search and filter contacts based on selected cities and/or a search string.
      * The search string checks name, email, and phone fields.
      */
-    public function filterByCity(array $cityIds = [], ?string $searchTerm = null)
+    public function filterByCity(array $cityIds = [], ?string $searchTerm = null, ?int $perPage = null)
     {
         $query = $this->baseQuery();
         
@@ -75,7 +75,9 @@ class ContactService
             );
         }
         
-        return $query->orderBy('nom')->get();
+        $query->orderBy('nom');
+
+        return $perPage ? $query->paginate($perPage) : $query->get();
     }
 
     /**

@@ -36,7 +36,7 @@
                 <div class="p-2">
                   @foreach($cities as $city)
                   <label class="flex items-center px-3 py-2 hover:bg-slate-50 rounded-md cursor-pointer">
-                    <input type="checkbox" name="cities[]" value="{{ $city->id }}" {{ in_array($city->id, $cityFilter) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 mr-3" onchange="updateCityDropdownText()">
+                    <input type="checkbox" name="cities[]" value="{{ $city->id }}" {{ in_array($city->id, $cityFilter) ? 'checked' : '' }} class="filter-city-checkbox w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 mr-3">
                     <span class="text-sm text-slate-700">{{ $city->nom }}</span>
                   </label>
                   @endforeach

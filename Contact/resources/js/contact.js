@@ -66,25 +66,81 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactsTableBody = document.getElementById('contacts-table-body');
     
     // Function to fetch contacts
-    const fetchContacts = () => {
-        const query = searchInput?.value || '';
-        const checkedCities = Array.from(document.querySelectorAll('input[name="cities[]"]:checked'))
-            .map(cb => `cities[]=${cb.value}`)
-            .join('&');
-            
-        const url = `${window.location.pathname}?search=${query}&${checkedCities}`;
+    const fetchContacts = (url = null) => {
+        const searchInput = document.getElementById('search-input');
+        const contactsTableBody = document.getElementById('contacts-table-body');
+        const paginationContainer = document.getElementById('pagination-container');
+
+        if (!url) {
+            const query = searchInput?.value || '';
+            const checkedCities = Array.from(document.querySelectorAll('.filter-city-checkbox:checked'))
+                .map(cb => `cities[]=${cb.value}`)
+                .join('&');
+            url = `${window.location.pathname}?search=${encodeURIComponent(query)}${checkedCities ? '&' + checkedCities : ''}`;
+        }
         
+        // Show loading state
+        if (contactsTableBody) contactsTableBody.style.opacity = '0.5';
+
         fetch(url, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.text())
-        .then(html => {
-            if (contactsTableBody) {
-                contactsTableBody.innerHTML = html;
+            headers: { 
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
             }
         })
-        .catch(err => console.error('Error fetching contacts:', err));
+        .then(async response => {
+            const contentType = response.headers.get("content-type");
+            const responseText = await response.text();
+            
+            // Try to parse as JSON first
+            if (contentType && contentType.includes("application/json")) {
+                try {
+                    return JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e);
+                    return { html: responseText };
+                }
+            }
+            
+            // If response looks like JSON, try to parse it
+            if (responseText.trim().startsWith('{')) {
+                try {
+                    return JSON.parse(responseText);
+                } catch (e) {
+                    // Not valid JSON, treat as HTML
+                    return { html: responseText };
+                }
+            }
+            
+            // Plain HTML response
+            return { html: responseText };
+        })
+        .then(data => {
+            if (contactsTableBody && data.html) {
+                // Safely insert the HTML content
+                contactsTableBody.innerHTML = data.html;
+                contactsTableBody.style.opacity = '1';
+            }
+            if (paginationContainer && data.pagination) {
+                paginationContainer.innerHTML = data.pagination;
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching contacts:', err);
+            if (contactsTableBody) contactsTableBody.style.opacity = '1';
+        });
     };
+
+    // Pagination Click Handling (Event Delegation)
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('#pagination-container a');
+        if (link) {
+            e.preventDefault();
+            fetchContacts(link.href);
+            // Smooth scroll to results
+            document.getElementById('search-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 
     // Debounce search
     let debounceTimer;
@@ -93,11 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
         debounceTimer = setTimeout(fetchContacts, 300);
     });
 
-    // City Dropdown & Filter Trigger
-    // We attach change event to city checkboxes for filtering
-    document.querySelectorAll('input[name="cities[]"]').forEach(cb => {
+    const searchForm = document.getElementById('search-form');
+    searchForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fetchContacts();
+    });
+
+    // Filter Trigger for Cities
+    document.querySelectorAll('.filter-city-checkbox').forEach(cb => {
         cb.addEventListener('change', () => {
-            updateCityDropdownText();
+            cityDropdown.updateText();
             fetchContacts();
         });
     });
@@ -299,16 +360,16 @@ const cityDropdown = {
     
     updateText() {
         if (!this.text) return;
-        const checked = document.querySelectorAll('input[name="cities[]"]:checked');
+        const checked = document.querySelectorAll('.filter-city-checkbox:checked');
         if (checked.length === 0) {
-            this.text.textContent = 'Select Cities';
-            this.text.className = 'text-slate-600';
+            this.text.textContent = 'All Cities';
+            this.text.className = 'text-slate-600 truncate';
         } else if (checked.length === 1) {
             this.text.textContent = checked[0].nextElementSibling.textContent;
-            this.text.className = 'text-slate-800 font-medium';
+            this.text.className = 'text-blue-600 font-semibold truncate';
         } else {
-            this.text.textContent = `${checked.length} cities selected`;
-            this.text.className = 'text-slate-800 font-medium';
+            this.text.textContent = `${checked.length} Cities`;
+            this.text.className = 'text-blue-600 font-semibold truncate';
         }
     }
 };
@@ -341,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.updateCityDropdownText = () => cityDropdown.updateText();
 window.clearAllCities = () => {
-    document.querySelectorAll('input[name="cities[]"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.filter-city-checkbox').forEach(cb => cb.checked = false);
     cityDropdown.updateText();
     // Also trigger fetch to clear filter
     const searchInput = document.getElementById('search-input');

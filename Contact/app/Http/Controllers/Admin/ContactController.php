@@ -21,8 +21,11 @@ class ContactController extends Controller
             ? $this->contactService->filterByCity($cityFilter, $search)
             : $this->contactService->getAll();
         
-        if ($request->ajax()) {
-            return view('admin.contacts.rows', compact('contacts'))->render();
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'html' => view('admin.contacts.rows', compact('contacts'))->render(),
+                'pagination' => property_exists($contacts, 'links') ? (string) $contacts->appends($request->all())->links() : ''
+            ]);
         }
 
         return view('admin.contacts.index', [

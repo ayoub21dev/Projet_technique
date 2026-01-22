@@ -14,30 +14,22 @@ class DashboardController extends Controller
     public function index(\Illuminate\Http\Request $request)
     {
         $search = $request->input('search');
+        $cityIds = $request->input('cities', []);
         
-        // If searching, use the filter service. Otherwise, get recent 5.
-        // Note: The user might want *all* contacts if they are scrolling/paginating, 
-        // but for now let's stick to: Search -> Found results; No Search -> Recent 5.
-        
-        if ($search) {
-            $contacts = $this->contactService->filterByCity([], $search);
-        } else {
-            // Replicate the 'recent' logic but we need it as a collection for the view
-            $contactQuery = Contact::query();
-            
-            $contacts = $contactQuery->with('cities', 'user')->latest()->limit(5)->get();
+        $contacts = $this->contactService->filterByCity($cityIds, $search, 10);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'html' => view('admin.contacts.rows', compact('contacts'))->render(),
+                'pagination' => (string) $contacts->appends($request->all())->links()
+            ]);
         }
-
-        if ($request->ajax()) {
-            return view('admin.contacts.rows', compact('contacts'))->render();
-        }
-
-
 
         return view('admin.dashboard', [
             'contacts' => $contacts,
             'cities' => City::all(),
-            'search' => $search
+            'search' => $search,
+            'selectedCities' => $cityIds
         ]);
     }
 }
