@@ -23,7 +23,8 @@ class ContactService
      */
     public function create(array $data)
     {
-        $data['user_id'] = Auth::id();
+        //$data['user_id'] = Auth::id();
+        $data['user_id'] = 1; // Default to ID 1 for local dev without auth
         $data = $this->handlePhoto($data);
         $contact = Contact::create($data);
         $this->syncCities($contact, $data);
@@ -84,9 +85,9 @@ class ContactService
     private function baseQuery()
     {
         $query = Contact::with('cities', 'user');
-        if (Auth::user()->role !== 'admin') {
-            $query->where('user_id', Auth::id());
-        }
+        // if (Auth::user()->role !== 'admin') {
+        //     $query->where('user_id', Auth::id());
+        // }
         return $query;
     }
 

@@ -23,9 +23,7 @@ class DashboardController extends Controller
             $contacts = $this->contactService->filterByCity([], $search);
         } else {
             // Replicate the 'recent' logic but we need it as a collection for the view
-            $contactQuery = Auth::user()->role === 'admin' 
-                ? Contact::query() 
-                : Contact::where('user_id', Auth::id());
+            $contactQuery = Contact::query();
             
             $contacts = $contactQuery->with('cities', 'user')->latest()->limit(5)->get();
         }
@@ -34,15 +32,9 @@ class DashboardController extends Controller
             return view('admin.contacts.rows', compact('contacts'))->render();
         }
 
-        // Stats logic (keep existing stats)
-        $totalQuery = Auth::user()->role === 'admin' ? Contact::query() : Contact::where('user_id', Auth::id());
-        $stats = [
-            'total_contacts' => $totalQuery->count(),
-            'total_cities' => City::count(),
-        ];
+
 
         return view('admin.dashboard', [
-            'stats' => $stats, 
             'contacts' => $contacts,
             'cities' => City::all(),
             'search' => $search
