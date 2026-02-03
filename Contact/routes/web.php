@@ -12,17 +12,18 @@ Route::get('/', [PublicController::class, 'index'])->name('home');
 
 // Auth (guests only)
 // Auth routes removed for local dev
-// Route::middleware('guest')->group(function () {
-//     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-//     Route::post('/login', [AuthController::class, 'login']);
-//     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-//     Route::post('/register', [AuthController::class, 'register']);
-// });
+// Auth (guests only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
 
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'can:access-admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('contacts', ContactController::class)->except(['create', 'show']);
     Route::resource('cities', CityController::class)->only(['index', 'store', 'destroy']);

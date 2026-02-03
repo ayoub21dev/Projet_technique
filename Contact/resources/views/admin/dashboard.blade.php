@@ -79,10 +79,14 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50 uppercase text-xs text-gray-500 font-semibold">
                 <tr>
+                    <th class="px-6 py-3 text-start w-12"></th> {{-- Photo --}}
                     <th class="px-6 py-3 text-start">Contact</th>
                     <th class="px-6 py-3 text-start">Phone</th>
                     <th class="px-6 py-3 text-start">Cities</th>
-
+                    <th class="px-6 py-3 text-start">Email</th>
+                    @if(Auth::check() && Auth::user()->role === 'admin')
+                    <th class="px-6 py-3 text-start">Owner</th>
+                    @endif
                     <th class="px-6 py-3 text-end">Actions</th>
                 </tr>
             </thead>

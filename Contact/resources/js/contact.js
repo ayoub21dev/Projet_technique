@@ -192,14 +192,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Check if we are on dashboard or admin list. 
                 // Admin controller returns HTML row. Dashboard might behave differently.
                 // For now, assuming Admin Index view structure.
-                if (data.html && contactsTableBody) {
-                    // Remove "No contacts found" row if it exists
-                    const noContactsRow = contactsTableBody.querySelector('td[colspan]')?.closest('tr');
-                    if (noContactsRow) noContactsRow.remove();
-                    
-                    contactsTableBody.insertAdjacentHTML('afterbegin', data.html);
+                if (data.html) {
+                    // Try to find table body again to be sure
+                    const tableBody = document.getElementById('contacts-table-body');
+                    if (tableBody) {
+                        // Remove "No contacts found" row if it exists
+                        const noContactsRow = tableBody.querySelector('td[colspan]')?.closest('tr');
+                        if (noContactsRow) noContactsRow.remove();
+                        
+                        tableBody.insertAdjacentHTML('afterbegin', data.html);
+                    } else {
+                        // If table not found, just refresh list
+                        fetchContacts();
+                    }
                 } else {
-                    window.location.reload();
+                    fetchContacts();
                 }
             } else {
                 alert('Something went wrong.');
@@ -240,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const row = document.getElementById(`contact-row-${data.contact.id}`);
                     if (row) row.outerHTML = data.html;
                 } else {
-                    window.location.reload();
+                    fetchContacts();
                 }
             } else {
                 alert('Error updating contact');
@@ -279,9 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.getElementById(`contact-row-${window.contactIdToDelete}`);
                 if (row) row.remove();
                 
-                // If table empty, reload or show empty message (simplest is reload or ignore)
+                // If table empty, refresh list
                 if (contactsTableBody && contactsTableBody.children.length === 0) {
-                     window.location.reload();
+                     fetchContacts();
                 }
             } else {
                 alert('Failed to delete.');

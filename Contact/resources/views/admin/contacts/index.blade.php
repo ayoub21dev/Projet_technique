@@ -3,81 +3,128 @@
 @section('header_title', Auth::user()->role === 'admin' ? 'All Contacts' : 'My Contacts')
 
 @section('content')
-<div class="flex flex-col">
-  <div class="-m-1.5 overflow-x-auto">
-    <div class="p-1.5 min-w-full inline-block align-middle">
-      <div class="modern-card border border-slate-200/60 rounded-xl shadow-lg overflow-hidden">
-        {{-- Header --}}
-        <div class="px-6 py-4 flex flex-wrap gap-3 justify-between items-center border-b border-slate-200/60 bg-gradient-to-r from-slate-50 to-white">
-          <div>
-            <h2 class="text-xl font-semibold text-slate-800">Contacts</h2>
-            <p class="text-sm text-slate-600">
-              {{ Auth::user()->role === 'admin' ? 'Manage all contacts across the system.' : 'Manage your personal network.' }}
-            </p>
-          </div>
-          <div id="success-msg" class="text-emerald-600 font-medium h-6"></div>
-          <button type="button" data-hs-overlay="#create-contact-modal" class="inline-flex items-center gap-x-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
-            Add contact
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Gestion des Contacts</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        {{ Auth::user()->role === 'admin' ? 'Gérez votre répertoire : ajoutez, modifiez ou supprimez vos contacts.' : 'Gérez votre réseau personnel de contacts.' }}
+      </p>
+    </div>
+    <button type="button" data-hs-overlay="#create-contact-modal" class="eco-btn-primary">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+      Ajouter un contact
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div id="success-msg" class="text-emerald-600 font-medium h-6"></div>
+
+  <!-- Main Card -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Search & Filter Bar -->
+    <div class="px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100">
+      <form id="search-form" method="GET" action="{{ route('contacts.index') }}" class="flex items-center gap-3 flex-1">
+        <!-- Search Input -->
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input type="text" id="search-input" name="search" value="{{ $search }}" placeholder="Rechercher un contact..." class="eco-search-input">
+        </div>
+
+        <!-- City Filter Dropdown -->
+        <div class="relative">
+          <select id="city-select" name="cities[]" class="eco-select" onchange="this.form.submit()">
+            <option value="">Sélectionner...</option>
+            @foreach($cities as $city)
+              <option value="{{ $city->id }}" {{ in_array($city->id, $cityFilter) ? 'selected' : '' }}>{{ $city->nom }}</option>
+            @endforeach
+          </select>
+          @if(count($cityFilter) > 0)
+          <button type="button" onclick="clearCityFilter()" class="absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
           </button>
+          @endif
         </div>
+      </form>
+    </div>
 
-        {{-- Search & Filter --}}
-        <div class="px-6 py-4 border-b border-slate-200/60 bg-slate-50/50">
-          <form id="search-form" method="GET" action="{{ route('contacts.index') }}" class="flex items-center gap-3">
-            <input type="text" id="search-input" name="search" value="{{ $search }}" placeholder="Search by name, email, or phone..." class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="eco-table w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Photo</th>
+            <th class="text-left">Désignation</th>
+            <th class="text-left">Téléphone</th>
+            <th class="text-left">Villes</th>
+            <th class="text-left">Email</th>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+            <th class="text-left">Propriétaire</th>
+            @endif
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="contacts-table-body">
+          @include('admin.contacts.rows')
+        </tbody>
+      </table>
+    </div>
 
-            <div class="relative">
-              <button type="button" id="cityDropdownButton" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors flex items-center gap-2 min-w-[160px]">
-                <span id="cityDropdownText" class="text-slate-600 truncate">{{ count($cityFilter) > 0 ? count($cityFilter).' cities' : 'All Cities' }}</span>
-                <svg class="w-4 h-4 text-slate-400 transition-transform flex-shrink-0" id="cityDropdownIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div id="cityDropdownMenu" class="hidden absolute z-20 right-0 w-48 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                <div class="p-2">
-                  @foreach($cities as $city)
-                  <label class="flex items-center px-3 py-2 hover:bg-slate-50 rounded-md cursor-pointer">
-                    <input type="checkbox" name="cities[]" value="{{ $city->id }}" {{ in_array($city->id, $cityFilter) ? 'checked' : '' }} class="filter-city-checkbox w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 mr-3">
-                    <span class="text-sm text-slate-700">{{ $city->nom }}</span>
-                  </label>
-                  @endforeach
-                </div>
-                @if(count($cities) > 0)
-                <div class="border-t border-slate-200 p-2">
-                  <button type="button" onclick="clearAllCities()" class="w-full text-left px-3 py-2 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors">Clear All</button>
-                </div>
-                @endif
-              </div>
-            </div>
+    <!-- Footer with Pagination -->
+    <div class="px-6 py-4 flex items-center justify-between border-t border-slate-100 bg-slate-50/50">
+      <p class="text-sm text-slate-500">
+        Showing <span class="font-medium">{{ $contacts->firstItem() ?? 0 }}</span> to <span class="font-medium">{{ $contacts->lastItem() ?? 0 }}</span> of <span class="font-medium">{{ $contacts->total() }}</span> results
+      </p>
+      
+      @if($contacts->hasPages())
+      <div class="eco-pagination">
+        {{-- Previous Page --}}
+        @if($contacts->onFirstPage())
+          <span class="eco-pagination-btn opacity-50 cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </span>
+        @else
+          <a href="{{ $contacts->previousPageUrl() }}" class="eco-pagination-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </a>
+        @endif
 
-            <button type="submit" class="inline-flex items-center gap-x-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm.6-3.844a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
-              Search
-            </button>
-            <a href="{{ route('contacts.index') }}" class="inline-flex items-center py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-all duration-200">Clear</a>
-          </form>
-        </div>
+        {{-- Page Numbers --}}
+        @foreach($contacts->getUrlRange(1, $contacts->lastPage()) as $page => $url)
+          @if($page == $contacts->currentPage())
+            <span class="eco-pagination-btn active">{{ $page }}</span>
+          @else
+            <a href="{{ $url }}" class="eco-pagination-btn">{{ $page }}</a>
+          @endif
+        @endforeach
 
-        {{-- Table --}}
-        <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-gradient-to-r from-slate-50 to-slate-100">
-            <tr>
-              <th class="ps-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Contact</th>
-              <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Phone</th>
-              <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Cities</th>
-              @if(Auth::user()->role === 'admin')
-              <th class="px-6 py-3 text-start text-xs font-semibold uppercase tracking-wide text-slate-700">Owner</th>
-              @endif
-              <th class="px-6 py-3 text-end"></th>
-            </tr>
-          </thead>
-          <tbody id="contacts-table-body" class="divide-y divide-slate-200 bg-white">
-            @include('admin.contacts.rows')
-          </tbody>
-        </table>
+        {{-- Next Page --}}
+        @if($contacts->hasMorePages())
+          <a href="{{ $contacts->nextPageUrl() }}" class="eco-pagination-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        @else
+          <span class="eco-pagination-btn opacity-50 cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </span>
+        @endif
       </div>
+      @endif
     </div>
   </div>
 </div>
+
+<script>
+function clearCityFilter() {
+  document.getElementById('city-select').value = '';
+  document.getElementById('search-form').submit();
+}
+</script>
 
 @include('admin.contacts._modals')
 @vite(['resources/js/contact.js'])
