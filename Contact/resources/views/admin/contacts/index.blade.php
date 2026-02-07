@@ -3,7 +3,7 @@
 @section('header_title', Auth::user()->role === 'admin' ? 'All Contacts' : 'My Contacts')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6" x-data="contactsManager()" x-init="init()">
   <!-- Page Header -->
   <div class="flex flex-wrap items-start justify-between gap-4">
     <div>
@@ -12,14 +12,14 @@
         {{ Auth::user()->role === 'admin' ? 'Gérez votre répertoire : ajoutez, modifiez ou supprimez vos contacts.' : 'Gérez votre réseau personnel de contacts.' }}
       </p>
     </div>
-    <button type="button" data-hs-overlay="#create-contact-modal" class="eco-btn-primary">
+    <button type="button" @click="openCreateModal()" class="eco-btn-primary">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
       Ajouter un contact
     </button>
   </div>
 
   <!-- Success Message -->
-  <div id="success-msg" class="text-emerald-600 font-medium h-6"></div>
+  <div id="success-msg" class="text-emerald-600 font-medium h-6" x-text="successMessage"></div>
 
   <!-- Main Card -->
   <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -31,19 +31,19 @@
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
-          <input type="text" id="search-input" name="search" value="{{ $search }}" placeholder="Rechercher un contact..." class="eco-search-input">
+          <input type="text" id="search-input" x-ref="searchInput" x-model="searchQuery" @input.debounce.300ms="fetchContacts()" name="search" value="{{ $search }}" placeholder="Rechercher un contact..." class="eco-search-input">
         </div>
 
         <!-- City Filter Dropdown -->
         <div class="relative">
-          <select id="city-select" name="cities[]" class="eco-select" onchange="this.form.submit()">
+          <select id="city-select" x-ref="citySelect" name="cities[]" class="eco-select" @change="selectedCities = $event.target.value ? [Number($event.target.value)] : []; fetchContacts()">
             <option value="">Sélectionner...</option>
             @foreach($cities as $city)
               <option value="{{ $city->id }}" {{ in_array($city->id, $cityFilter) ? 'selected' : '' }}>{{ $city->nom }}</option>
             @endforeach
           </select>
           @if(count($cityFilter) > 0)
-          <button type="button" onclick="clearCityFilter()" class="absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+          <button type="button" @click="selectedCities = []; $refs.citySelect.value = ''; fetchContacts()" class="absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -69,7 +69,7 @@
             <th class="text-right">Actions</th>
           </tr>
         </thead>
-        <tbody id="contacts-table-body">
+        <tbody id="contacts-table-body" x-ref="contactsTableBody">
           @include('admin.contacts.rows')
         </tbody>
       </table>
@@ -82,7 +82,7 @@
       </p>
       
       @if($contacts->hasPages())
-      <div class="eco-pagination">
+      <div id="pagination-container" x-ref="paginationContainer" class="eco-pagination">
         {{-- Previous Page --}}
         @if($contacts->onFirstPage())
           <span class="eco-pagination-btn opacity-50 cursor-not-allowed">
@@ -118,13 +118,6 @@
     </div>
   </div>
 </div>
-
-<script>
-function clearCityFilter() {
-  document.getElementById('city-select').value = '';
-  document.getElementById('search-form').submit();
-}
-</script>
 
 @include('admin.contacts._modals')
 @vite(['resources/js/contact.js'])

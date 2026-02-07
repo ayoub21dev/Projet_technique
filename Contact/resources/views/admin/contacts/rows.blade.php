@@ -10,7 +10,7 @@
         </svg>
       </div>
       <p class="text-slate-500 text-sm">Aucun contact trouvé.</p>
-      <button type="button" data-hs-overlay="#create-contact-modal" class="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+      <button type="button" @click="openCreateModal()" class="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
         + Ajouter votre premier contact
       </button>
     </div>

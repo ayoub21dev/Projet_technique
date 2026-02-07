@@ -1,435 +1,216 @@
+const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content;
 
-/**
- * Contact Management AJAX Logic
- */
+const registerContactsManager = () => {
+    const Alpine = window.Alpine;
+    if (!Alpine || window.__contactsManagerRegistered) return;
 
-// Utility for CSRF Token
-const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content;
+    Alpine.data('contactsManager', () => ({
+        successMessage: '',
+        searchQuery: '',
+        selectedCities: [],
+        cityDropdownOpen: false,
+        showCreateModal: false,
+        showEditModal: false,
+        showDeleteModal: false,
+        contactIdToDelete: null,
+        createSubmitting: false,
+        editSubmitting: false,
+        deleteSubmitting: false,
 
-// Modal Logic
-const Modal = {
-    open(id) {
-        const modal = document.getElementById(id);
-        if (!modal) return;
-        modal.classList.remove('hidden');
-        modal.classList.remove('pointer-events-none');
-        // Handle transition if inner exists
-        const inner = modal.firstElementChild;
-        if (inner) {
-            inner.classList.remove('opacity-0', 'mt-0');
-            inner.classList.add('opacity-100', 'mt-7');
-        }
-    },
-    close(id) {
-        const modal = document.getElementById(id);
-        if (!modal) return;
-        modal.classList.add('hidden', 'pointer-events-none');
-        const inner = modal.firstElementChild;
-        if (inner) {
-            inner.classList.add('opacity-0', 'mt-0');
-            inner.classList.remove('opacity-100', 'mt-7');
-        }
-        // Reset forms inside if any
-        const form = modal.querySelector('form');
-        if (form) form.reset();
-    }
-};
+        init() {
+            this.searchQuery = this.$refs.searchInput?.value || '';
+            this.selectedCities = Array.from(this.$el.querySelectorAll('.filter-city-checkbox:checked')).map((el) => Number(el.value));
 
-// Expose Modal to window if needed or just use internal
-window.closeModal = (id) => Modal.close(id);
-
-// Success Message Helper
-const showSuccess = (msg) => {
-    const el = document.getElementById('success-msg');
-    if (el) {
-        el.innerText = msg;
-        setTimeout(() => el.innerText = '', 3000);
-    }
-};
-
-// --- Event Listeners & Logic ---
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // Close buttons
-    document.querySelectorAll('.modal-close').forEach(btn => {
-        btn.addEventListener('click', () => Modal.close(btn.dataset.modal));
-    });
-
-    // Open create modal
-    document.querySelectorAll('[data-hs-overlay="#create-contact-modal"]').forEach(btn => {
-        btn.addEventListener('click', () => Modal.open('create-contact-modal'));
-    });
-
-    // SEARCH & FILTER
-    const searchInput = document.getElementById('search-input');
-    const contactsTableBody = document.getElementById('contacts-table-body');
-    
-    // Function to fetch contacts
-    const fetchContacts = (url = null) => {
-        const searchInput = document.getElementById('search-input');
-        const contactsTableBody = document.getElementById('contacts-table-body');
-        const paginationContainer = document.getElementById('pagination-container');
-
-        if (!url) {
-            const query = searchInput?.value || '';
-            const checkedCities = Array.from(document.querySelectorAll('.filter-city-checkbox:checked'))
-                .map(cb => `cities[]=${cb.value}`)
-                .join('&');
-            url = `${window.location.pathname}?search=${encodeURIComponent(query)}${checkedCities ? '&' + checkedCities : ''}`;
-        }
-        
-        // Show loading state
-        if (contactsTableBody) contactsTableBody.style.opacity = '0.5';
-
-        fetch(url, {
-            headers: { 
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(async response => {
-            const contentType = response.headers.get("content-type");
-            const responseText = await response.text();
-            
-            // Try to parse as JSON first
-            if (contentType && contentType.includes("application/json")) {
-                try {
-                    return JSON.parse(responseText);
-                } catch (e) {
-                    console.error('Failed to parse JSON:', e);
-                    return { html: responseText };
-                }
-            }
-            
-            // If response looks like JSON, try to parse it
-            if (responseText.trim().startsWith('{')) {
-                try {
-                    return JSON.parse(responseText);
-                } catch (e) {
-                    // Not valid JSON, treat as HTML
-                    return { html: responseText };
-                }
-            }
-            
-            // Plain HTML response
-            return { html: responseText };
-        })
-        .then(data => {
-            if (contactsTableBody && data.html) {
-                // Safely insert the HTML content
-                contactsTableBody.innerHTML = data.html;
-                contactsTableBody.style.opacity = '1';
-            }
-            if (paginationContainer && data.pagination) {
-                paginationContainer.innerHTML = data.pagination;
-            }
-        })
-        .catch(err => {
-            console.error('Error fetching contacts:', err);
-            if (contactsTableBody) contactsTableBody.style.opacity = '1';
-        });
-    };
-
-    // Pagination Click Handling (Event Delegation)
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('#pagination-container a');
-        if (link) {
-            e.preventDefault();
-            fetchContacts(link.href);
-            // Smooth scroll to results
-            document.getElementById('search-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
-
-    // Debounce search
-    let debounceTimer;
-    searchInput?.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(fetchContacts, 300);
-    });
-
-    const searchForm = document.getElementById('search-form');
-    searchForm?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        fetchContacts();
-    });
-
-    // Filter Trigger for Cities
-    document.querySelectorAll('.filter-city-checkbox').forEach(cb => {
-        cb.addEventListener('change', () => {
-            cityDropdown.updateText();
-            fetchContacts();
-        });
-    });
-
-
-    // CREATE CONTACT
-    const createForm = document.getElementById('create-contact-form');
-    createForm?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerText = 'Creating...';
-
-        try {
-            const res = await fetch(this.action, {
-                method: 'POST',
-                body: new FormData(this),
-                headers: { 
-                    'X-Requested-With': 'XMLHttpRequest', 
-                    'Accept': 'application/json' 
-                }
+            this.$el.addEventListener('click', (event) => {
+                const link = event.target.closest('#pagination-container a');
+                if (!link) return;
+                event.preventDefault();
+                this.fetchContacts(link.href);
             });
-            const data = await res.json();
-            
-            if (res.status === 422) {
-                alert('Validation Error:\n' + Object.values(data.errors).flat().join('\n'));
-            } else if (data.success) {
-                Modal.close('create-contact-modal');
-                showSuccess('Contact created successfully!');
-                // Check if we are on dashboard or admin list. 
-                // Admin controller returns HTML row. Dashboard might behave differently.
-                // For now, assuming Admin Index view structure.
+
+            window.openEditModal = (contactId) => this.openEditModal(contactId);
+            window.deleteContact = (contactId) => this.confirmDelete(contactId);
+            window.clearAllCities = () => this.clearCities();
+        },
+
+        showSuccess(message) {
+            this.successMessage = message;
+            setTimeout(() => {
+                this.successMessage = '';
+            }, 3000);
+        },
+
+        cityText() {
+            if (this.selectedCities.length === 0) return 'All Cities';
+            if (this.selectedCities.length === 1) {
+                const checked = this.$el.querySelector('.filter-city-checkbox:checked + span');
+                return checked?.textContent?.trim() || '1 City';
+            }
+
+            return `${this.selectedCities.length} Cities`;
+        },
+
+        async fetchContacts(url = null) {
+            if (!url) {
+                const params = new URLSearchParams();
+                if (this.searchQuery) params.set('search', this.searchQuery);
+                this.selectedCities.forEach((cityId) => params.append('cities[]', cityId));
+                url = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+            }
+
+            try {
+                this.$refs.contactsTableBody.style.opacity = '0.5';
+                const response = await fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                    },
+                });
+
+                const data = await response.json();
                 if (data.html) {
-                    // Try to find table body again to be sure
-                    const tableBody = document.getElementById('contacts-table-body');
-                    if (tableBody) {
-                        // Remove "No contacts found" row if it exists
-                        const noContactsRow = tableBody.querySelector('td[colspan]')?.closest('tr');
-                        if (noContactsRow) noContactsRow.remove();
-                        
-                        tableBody.insertAdjacentHTML('afterbegin', data.html);
-                    } else {
-                        // If table not found, just refresh list
-                        fetchContacts();
-                    }
-                } else {
-                    fetchContacts();
+                    this.$refs.contactsTableBody.innerHTML = data.html;
+                    Alpine.initTree(this.$refs.contactsTableBody);
                 }
-            } else {
-                alert('Something went wrong.');
+
+                if (data.pagination && this.$refs.paginationContainer) {
+                    this.$refs.paginationContainer.innerHTML = data.pagination;
+                    Alpine.initTree(this.$refs.paginationContainer);
+                }
+            } catch (error) {
+                console.error('Failed to fetch contacts', error);
+            } finally {
+                this.$refs.contactsTableBody.style.opacity = '1';
             }
-        } catch (err) {
-            console.error(err);
-            alert('An error occurred.');
-        } finally {
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    });
+        },
 
-    // EDIT CONTACT
-    const editForm = document.getElementById('edit-contact-form');
-    editForm?.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerText = 'Updating...';
+        toggleCity(cityId, checked) {
+            const numericId = Number(cityId);
+            if (checked && !this.selectedCities.includes(numericId)) {
+                this.selectedCities.push(numericId);
+            }
 
-        try {
-            const res = await fetch(this.action, {
-                method: 'POST', // Method spoofing usually handled by _method input
-                body: new FormData(this),
-                headers: { 
-                    'X-Requested-With': 'XMLHttpRequest', 
-                    'Accept': 'application/json' 
-                }
+            if (!checked) {
+                this.selectedCities = this.selectedCities.filter((id) => id !== numericId);
+            }
+
+            this.fetchContacts();
+        },
+
+        clearCities() {
+            this.selectedCities = [];
+            this.$el.querySelectorAll('.filter-city-checkbox').forEach((checkbox) => {
+                checkbox.checked = false;
             });
-            const data = await res.json();
-            
-            if (res.ok && data.success) {
-                Modal.close('edit-contact-modal');
-                showSuccess('Contact updated successfully!');
-                if (data.html) {
-                    const row = document.getElementById(`contact-row-${data.contact.id}`);
-                    if (row) row.outerHTML = data.html;
-                } else {
-                    fetchContacts();
+            this.fetchContacts();
+        },
+
+        openCreateModal() { this.showCreateModal = true; },
+        closeCreateModal() { this.showCreateModal = false; this.$refs.createForm?.reset(); },
+
+        async submitCreateContact() {
+            this.createSubmitting = true;
+            try {
+                const response = await fetch(this.$refs.createForm.action, {
+                    method: 'POST',
+                    body: new FormData(this.$refs.createForm),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+                });
+
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    this.closeCreateModal();
+                    this.showSuccess('Contact created successfully!');
+                    this.fetchContacts();
                 }
-            } else {
-                alert('Error updating contact');
+            } finally {
+                this.createSubmitting = false;
             }
-        } catch (err) {
-            console.error(err);
-            alert('An error occurred while updating.');
-        } finally {
-            btn.disabled = false;
-            btn.innerText = originalText;
-        }
-    });
+        },
 
-    // DELETE CONTACT
-    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-    confirmDeleteBtn?.addEventListener('click', async function() {
-        if (!window.contactIdToDelete) return;
-        
-        this.disabled = true;
-        this.innerText = 'Deleting...';
-
-        try {
-            const res = await fetch(`/admin/contacts/${window.contactIdToDelete}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
+        async openEditModal(contactId) {
+            const response = await fetch(`/admin/contacts/${contactId}/edit`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
             });
-            const data = await res.json();
-            
-            if (data.success) {
-                Modal.close('delete-contact-modal');
-                showSuccess('Contact deleted successfully!');
-                const row = document.getElementById(`contact-row-${window.contactIdToDelete}`);
-                if (row) row.remove();
-                
-                // If table empty, refresh list
-                if (contactsTableBody && contactsTableBody.children.length === 0) {
-                     fetchContacts();
-                }
+
+            const contact = await response.json();
+            this.$refs.editForm.action = `/admin/contacts/${contactId}`;
+            this.$refs.editForm.querySelector('#edit-nom').value = contact.nom;
+            this.$refs.editForm.querySelector('#edit-prenom').value = contact.prenom;
+            this.$refs.editForm.querySelector('#edit-email').value = contact.email;
+            this.$refs.editForm.querySelector('#edit-telephone').value = contact.telephone;
+            this.$refs.editForm.querySelectorAll('input[name="cities[]"]').forEach((el) => { el.checked = false; });
+            contact.cities?.forEach((city) => {
+                const checkbox = this.$refs.editForm.querySelector(`#edit-city-${city.id}`);
+                if (checkbox) checkbox.checked = true;
+            });
+
+            if (contact.photo) {
+                this.$refs.currentPhotoPreview.src = `/storage/${contact.photo}`;
+                this.$refs.currentPhotoContainer.classList.remove('hidden');
             } else {
-                alert('Failed to delete.');
+                this.$refs.currentPhotoContainer.classList.add('hidden');
             }
-        } catch (err) {
-            console.error(err);
-            alert('An error occurred.');
-        } finally {
-            this.disabled = false;
-            this.innerText = 'Confirm';
-            window.contactIdToDelete = null;
-        }
-    });
-});
 
-// --- GLOBAL FUNCTIONS (called by inline HTML) ---
+            this.showEditModal = true;
+        },
 
-window.openEditModal = async function(contactId) {
-    try {
-        const res = await fetch(`/admin/contacts/${contactId}/edit`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        });
-        const contact = await res.json();
-        
-        const form = document.getElementById('edit-contact-form');
-        form.action = `/admin/contacts/${contactId}`;
-        
-        // Populate fields
-        if(form.querySelector('#edit-nom')) form.querySelector('#edit-nom').value = contact.nom;
-        if(form.querySelector('#edit-prenom')) form.querySelector('#edit-prenom').value = contact.prenom;
-        if(form.querySelector('#edit-email')) form.querySelector('#edit-email').value = contact.email;
-        if(form.querySelector('#edit-telephone')) form.querySelector('#edit-telephone').value = contact.telephone;
-        
-        // Reset checkboxes
-        form.querySelectorAll('input[name="cities[]"]').forEach(el => el.checked = false);
-        // Check owned cities
-        contact.cities?.forEach(city => {
-            const cb = document.getElementById(`edit-city-${city.id}`);
-            if (cb) cb.checked = true;
-        });
+        closeEditModal() { this.showEditModal = false; this.$refs.editForm?.reset(); },
 
-        // Photo
-        const photoContainer = document.getElementById('current-photo-container');
-        const photoPreview = document.getElementById('current-photo-preview');
-        if (contact.photo) {
-            photoPreview.src = `/storage/${contact.photo}`;
-            photoContainer.classList.remove('hidden');
-        } else {
-            photoContainer.classList.add('hidden');
-        }
+        async submitEditContact() {
+            this.editSubmitting = true;
+            try {
+                const response = await fetch(this.$refs.editForm.action, {
+                    method: 'POST',
+                    body: new FormData(this.$refs.editForm),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+                });
 
-        Modal.open('edit-contact-modal');
-    } catch (err) {
-        console.error(err);
-        alert('Failed to load contact details.');
-    }
-};
-
-window.deleteContact = function(contactId) {
-    window.contactIdToDelete = contactId;
-    Modal.open('delete-contact-modal');
-};
-
-// City Dropdown Globals
-const cityDropdown = {
-    button: document.getElementById('cityDropdownButton'),
-    menu: document.getElementById('cityDropdownMenu'),
-    icon: document.getElementById('cityDropdownIcon'),
-    text: document.getElementById('cityDropdownText'),
-    
-    toggle() {
-        if (!this.menu) return;
-        const isHidden = this.menu.classList.toggle('hidden');
-        if (this.icon) this.icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-    },
-    
-    updateText() {
-        if (!this.text) return;
-        const checked = document.querySelectorAll('.filter-city-checkbox:checked');
-        if (checked.length === 0) {
-            this.text.textContent = 'All Cities';
-            this.text.className = 'text-slate-600 truncate';
-        } else if (checked.length === 1) {
-            this.text.textContent = checked[0].nextElementSibling.textContent;
-            this.text.className = 'text-blue-600 font-semibold truncate';
-        } else {
-            this.text.textContent = `${checked.length} Cities`;
-            this.text.className = 'text-blue-600 font-semibold truncate';
-        }
-    }
-};
-
-// Re-attach listener if DOM element exists (for the button itself)
-document.addEventListener('DOMContentLoaded', () => {
-    // Re-bind elements in case they weren't ready
-    cityDropdown.button = document.getElementById('cityDropdownButton');
-    cityDropdown.menu = document.getElementById('cityDropdownMenu');
-    cityDropdown.icon = document.getElementById('cityDropdownIcon');
-    cityDropdown.text = document.getElementById('cityDropdownText');
-
-    cityDropdown.button?.addEventListener('click', e => { 
-        e.preventDefault(); 
-        cityDropdown.toggle(); 
-    });
-
-    document.addEventListener('click', e => {
-        if (cityDropdown.menu && !cityDropdown.menu.classList.contains('hidden')) {
-            if (!cityDropdown.button?.contains(e.target) && !cityDropdown.menu?.contains(e.target)) {
-                cityDropdown.menu.classList.add('hidden');
-                if (cityDropdown.icon) cityDropdown.icon.style.transform = 'rotate(0deg)';
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    this.closeEditModal();
+                    this.showSuccess('Contact updated successfully!');
+                    this.fetchContacts();
+                }
+            } finally {
+                this.editSubmitting = false;
             }
-        }
-    });
-    
-    // Initial text update
-    cityDropdown.updateText();
-});
+        },
 
-window.updateCityDropdownText = () => cityDropdown.updateText();
-window.clearAllCities = () => {
-    document.querySelectorAll('.filter-city-checkbox').forEach(cb => cb.checked = false);
-    cityDropdown.updateText();
-    // Also trigger fetch to clear filter
-    const searchInput = document.getElementById('search-input');
-    const event = new Event('input');
-    // Or just manually call fetch logic if we exposed it, but triggering change on a checkbox or search input is easier if we wired it up.
-    // Actually, checking standard implementation:
-    // We added 'change' listener to checkboxes in DOMContentLoaded.
-    // Changing 'checked' prop via JS does NOT trigger 'change' event automatically.
-    // So we must manually trigger filtering.
-    // Let's just create a new 'change' event and dispatch it on one of them or call a global fetch if we had one.
-    // Simplest: just trigger a custom event or click the search button ? 
-    // Wait, the "Clear All" button calls this.
-    // Let's make sure we trigger the filter refresh.
-    
-    // Re-trigger fetch
-    // Since fetchContacts is inside DOMContentLoaded scope, we can't call it directly.
-    // We can dispatch an event on the search input.
-    const container = document.getElementById('search-input');
-    if (container) {
-         // Trigger input event to refresh
-         container.dispatchEvent(new Event('input'));
-    }
+        confirmDelete(contactId) { this.contactIdToDelete = contactId; this.showDeleteModal = true; },
+        closeDeleteModal() { this.contactIdToDelete = null; this.showDeleteModal = false; },
+
+        async submitDeleteContact() {
+            if (!this.contactIdToDelete) return;
+            this.deleteSubmitting = true;
+
+            try {
+                const response = await fetch(`/admin/contacts/${this.contactIdToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken(),
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    this.closeDeleteModal();
+                    this.showSuccess('Contact deleted successfully!');
+                    this.fetchContacts();
+                }
+            } finally {
+                this.deleteSubmitting = false;
+            }
+        },
+    }));
+
+    window.__contactsManagerRegistered = true;
 };
+
+if (window.Alpine) {
+    registerContactsManager();
+} else {
+    document.addEventListener('alpine:init', registerContactsManager, { once: true });
+}
