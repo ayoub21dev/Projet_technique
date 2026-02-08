@@ -24,11 +24,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin
 Route::prefix('admin')->middleware(['auth', 'can:access-admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', function() { return redirect()->route('contacts.index'); });
     Route::resource('contacts', ContactController::class)->except(['create', 'show']);
     Route::resource('cities', CityController::class)->only(['index', 'store', 'destroy']);
 });
 
 // Dashboard redirect
-Route::redirect('/dashboard', '/admin/dashboard');
-Route::redirect('/admin', '/admin/dashboard');
+Route::redirect('/dashboard', '/admin/contacts');
+Route::redirect('/admin/dashboard', '/admin/contacts');
+Route::redirect('/admin', '/admin/contacts');
