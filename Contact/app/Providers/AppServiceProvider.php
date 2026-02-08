@@ -24,5 +24,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('access-admin', function (User $user) {
             return $user->role === 'admin';
         });
+
+        Gate::define('update-contact', function (User $user, \App\Models\Contact $contact) {
+            return $user->role === 'admin' || $user->id === $contact->user_id;
+        });
+
+        Gate::define('delete-contact', function (User $user, \App\Models\Contact $contact) {
+            return $user->role === 'admin' || $user->id === $contact->user_id;
+        });
     }
 }
