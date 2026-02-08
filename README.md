@@ -53,7 +53,7 @@ marp: true
 - **Architecture N-tier :** Services
 - **Architecture :** MVC
 - **Moteur de vues :** Blade
-- **AJAX :** Interactivité fluide sans rechargement
+- **Alpine.js:** Interactivité fluide sans rechargement
 - **Gestion des Images :** Upload et stockage sécurisé
 
 ---
