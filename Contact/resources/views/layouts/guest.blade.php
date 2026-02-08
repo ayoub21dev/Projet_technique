@@ -84,5 +84,13 @@
       <!-- End Grid -->
     </footer>
     <!-- ========== END FOOTER ========== -->
+    <!-- Alpine init -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Alpine) {
+                window.Alpine.start();
+            }
+        });
+    </script>
 </body>
 </html>

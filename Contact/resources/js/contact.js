@@ -19,7 +19,9 @@ const registerContactsManager = () => {
 
         init() {
             this.searchQuery = this.$refs.searchInput?.value || '';
-            this.selectedCities = Array.from(this.$el.querySelectorAll('.filter-city-checkbox:checked')).map((el) => Number(el.value));
+            // Read selected city from the select element
+            const cityValue = this.$refs.citySelect?.value;
+            this.selectedCities = cityValue ? [Number(cityValue)] : [];
 
             this.$el.addEventListener('click', (event) => {
                 const link = event.target.closest('#pagination-container a');
@@ -99,9 +101,9 @@ const registerContactsManager = () => {
 
         clearCities() {
             this.selectedCities = [];
-            this.$el.querySelectorAll('.filter-city-checkbox').forEach((checkbox) => {
-                checkbox.checked = false;
-            });
+            if (this.$refs.citySelect) {
+                this.$refs.citySelect.value = '';
+            }
             this.fetchContacts();
         },
 

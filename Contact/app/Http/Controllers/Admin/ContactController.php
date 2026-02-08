@@ -18,8 +18,8 @@ class ContactController extends Controller
         $cityFilter = (array) $request->input('cities', []);
         
         $contacts = ($search || $cityFilter) 
-            ? $this->contactService->filterByCity($cityFilter, $search)
-            : $this->contactService->getAll();
+            ? $this->contactService->filterByCity($cityFilter, $search, 10)
+            : $this->contactService->getAllPaginated(10);
         
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([

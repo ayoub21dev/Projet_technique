@@ -1,16 +1,20 @@
 <tr id="contact-row-{{ $contact->id }}" class="hover:bg-slate-50/50 transition-colors">
   <!-- Photo -->
   <td>
-    <div class="flex-shrink-0 relative">
+    <div class="flex-shrink-0 relative h-12 w-12">
       @if($contact->photo)
         <img class="h-12 w-12 rounded-lg object-cover shadow-sm border border-slate-100" 
              src="{{ asset('storage/'.$contact->photo) }}" 
              alt="{{ $contact->prenom }}"
-             onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="hidden items-center justify-center h-12 w-12 rounded-lg bg-slate-100 text-slate-400 border border-slate-200">
+          <i class="fa-solid fa-image text-2xl"></i>
+        </div>
+      @else
+        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-slate-100 text-slate-400 border border-slate-200">
+          <i class="fa-solid fa-image text-2xl"></i>
+        </div>
       @endif
-      <span class="placeholder-fallback {{ $contact->photo ? 'hidden' : '' }} flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-violet-500 text-white shadow-sm">
-        <span class="text-sm font-bold">{{ strtoupper(substr($contact->prenom, 0, 1)) }}{{ strtoupper(substr($contact->nom, 0, 1)) }}</span>
-      </span>
     </div>
   </td>
   

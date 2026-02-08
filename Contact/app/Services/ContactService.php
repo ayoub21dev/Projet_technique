@@ -18,6 +18,14 @@ class ContactService
     }
 
     /**
+     * Retrieve all contacts with pagination.
+     */
+    public function getAllPaginated($perPage = 10)
+    {
+        return $this->baseQuery()->orderBy('nom')->paginate($perPage);
+    }
+
+    /**
      * Create a new contact, associate it with the current user,
      * handle photo upload, and sync city relationships.
      */

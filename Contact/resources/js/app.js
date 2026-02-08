@@ -1,5 +1,8 @@
 import './bootstrap';
 import 'preline';
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
 
 // Type definition for HSStaticMethods in global window object
 window.HSStaticMethods = window.HSStaticMethods || {};
