@@ -22,7 +22,6 @@ marp: true
 6. [Analyse: Analyse Fonctionnelle](#-analyse-analyse-fonctionnelle)
 7. [Conception](#-conception)
 
-
 ---
 
 ## la méthode Waterfall
@@ -30,12 +29,14 @@ marp: true
 ![Waterfall](asses/Waterfall.webp)
 
 ---
+
 # Exigences: Travail à faire
+
 Développer l'Application Contact Management
 Partie Publique: Interface permettant aux visiteurs de consulter les contacts. Fonctionnalités : Recherche par nom, filtre par ville, pagination (10 éléments/page).
-Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnalités : Modales pour ajout/édition, AJAX pour les mises à jour asynchrones.
----
+Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnalités Modales pour ajout/édition, AJAX pour les mises à jour asynchrones.
 
+---
 
 ## Contexte du Projet
 
@@ -93,22 +94,15 @@ Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnali
 | **v7**  | API                                           | `api`        |
 | **v8**  | Mobile App                                    | `mobile`     |
 
-# v1 Public Side - Live Coding
-### Creation du portfolio personnel
+## 💻 Sujets - Live Coding
 
-# v2 Admin Side - Live Coding
-### Gestion des articles (CRUD)
-
-# v3 Authentification / Authorization - Live Coding
- 
-# v4 SPA / AJAX - Live Coding
-### Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
-### Une barre de recherche filtrant des éléments par titre.
-
-# v5 SPA / Alpine.js - Live Coding
-
-# v6 Spatie / Authorization - Live Coding
-
-# v7 API - Live Coding
-
-# v8 Mobile App - Live Coding
+| Version | Sujet                            | Tâches                                                                 |
+| :------ | :------------------------------- | :--------------------------------------------------------------------- |
+| **v1**  | Public Side                      | Création du portfolio personnel                                        |
+| **v2**  | Admin Side                       | Gestion des articles (CRUD)                                            |
+| **v3**  | Authentification / Authorization | -                                                                      |
+| **v4**  | SPA / AJAX                       | - Bouton "Ajouter" (Modale)<br>- Barre de recherche (Filtre par titre) |
+| **v5**  | SPA / Alpine.js                  | -                                                                      |
+| **v6**  | Spatie / Authorization           | -                                                                      |
+| **v7**  | API                              | -                                                                      |
+| **v8**  | Mobile App                       | -                                                                      |
