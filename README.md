@@ -15,14 +15,13 @@ marp: true
 ## 📑 Sommaire
 
 1. [la méthode Waterfall](#-la-méthode-waterfall)
-2. [Choix de sujet](#-choix-de-sujet)
-3. [Contexte du Projet](#-contexte-du-projet)
-4. [Exigences: Analyse Technique](#-exigences-analyse-technique)
-5. [Stack Technique](#-stack-technique)
-6. [Fonctionnalités Clés](#-fonctionnalités-clés)
-7. [Analyse: Analyse Fonctionnelle](#-analyse-analyse-fonctionnelle)
-8. [Conception](#-conception)
-9. [Sujet - Live Coding](#-sujet---live-coding)
+2. [Contexte du Projet](#-contexte-du-projet)
+3. [Exigences: Analyse Technique](#-exigences-analyse-technique)
+4. [Stack Technique](#-stack-technique)
+5. [Fonctionnalités Clés](#-fonctionnalités-clés)
+6. [Analyse: Analyse Fonctionnelle](#-analyse-analyse-fonctionnelle)
+7. [Conception](#-conception)
+
 
 ---
 
