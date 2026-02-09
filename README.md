@@ -95,16 +95,16 @@ Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnali
 | **v8**  | Mobile App                                    | `mobile`     |
 
 # v1 Public Side - Live Coding
-## Creation du portfolio personnel
+### Creation du portfolio personnel
 
 # v2 Admin Side - Live Coding
-## Gestion des articles (CRUD)
+### Gestion des articles (CRUD)
 
 # v3 Authentification / Authorization - Live Coding
  
 # v4 SPA / AJAX - Live Coding
-- Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
-- Une barre de recherche filtrant des éléments par titre.
+### Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
+### Une barre de recherche filtrant des éléments par titre.
 
 # v5 SPA / Alpine.js - Live Coding
 
