@@ -3,13 +3,12 @@ marp: true
 ---
 
 # Application de gestion de Contacts
+
 **Contact Management / Filtrage par Ville**
 
 **Présentée par :** Ayoub jalyta  
 **Encadré par :** M. Fouad Essarraj  
 **Date :** 05/01/2026
-
-
 
 ---
 
@@ -26,27 +25,28 @@ marp: true
 9. [Sujet - Live Coding](#-sujet---live-coding)
 
 ---
+
 ## la méthode Waterfall
 
 ![Waterfall](asses/Waterfall.webp)
 
-
+---
+# Exigences: Travail à faire
+Développer l'Application Contact Management
+Partie Publique: Interface permettant aux visiteurs de consulter les contacts. Fonctionnalités : Recherche par nom, filtre par ville, pagination (10 éléments/page).
+Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnalités : Modales pour ajout/édition, AJAX pour les mises à jour asynchrones.
 ---
 
-## 🎯 Choix de sujet
 
-**Contact Management / Filtrage par Ville**
-
----
-
-## 🎯 Contexte du Projet
+## Contexte du Projet
 
 ![2-tup](asses/La-methode-2TUP-6.png)
 
 ---
+
 ## Exigences: Analyse Technique
 
-##  Stack Technique
+## Stack Technique
 
 - **Base de données :** MySQL
 - **Framework :** Laravel
@@ -57,6 +57,7 @@ marp: true
 - **Gestion des Images :** Upload et stockage sécurisé
 
 ---
+
 - **Internationalisation :** Support multilingue de l'interface
 - **Vite :** Optimisation des performances
 - **Preline UI :** Intégration d'un design système moderne
@@ -79,40 +80,36 @@ marp: true
 <img src='./asses/DigrameClass.png' width='200'>
 
 ---
-# Versions
 
-## Version 1
-- **Focus:** Public Side
-- **Branch:** public
+## Versions & Branches
 
-## Version 2
-- **Focus:** Admin Side
-- **Branch:** admin
+| Version | Description                                   | Branche      |
+| :------ | :-------------------------------------------- | :----------- |
+| **v1**  | Public Side (Consultation, Recherche, Filtre) | `public`     |
+| **v2**  | Admin Side (CRUD, Modales)                    | `admin`      |
+| **v3**  | Authentification / Authorization (Gates)      | `gates`      |
+| **v4**  | SPA / AJAX                                    | `spa-ajax`   |
+| **v5**  | SPA / Alpine.js                               | `spa-alpine` |
+| **v6**  | Spatie / Authorization                        | `spatie`     |
+| **v7**  | API                                           | `api`        |
+| **v8**  | Mobile App                                    | `mobile`     |
 
-## Version 3
-- **Focus:** Authentication / Authorization (Gates)
-- **Branch:** gates
+# v1 Public Side - Live Coding
+## Creation du portfolio personnel
 
-## Version 4
-- **Focus:** SPA (Single Page Application) / Alpine.js
-- **Branch:** spa
+# v2 Admin Side - Live Coding
+## Gestion des articles (CRUD)
 
-## Version 5
-- **Focus:** Spatie / Authorization
-- **Branch:** spatie
+# v3 Authentification / Authorization - Live Coding
+ 
+# v4 SPA / AJAX - Live Coding
+- Un bouton “Ajouter” qui ouvre une modale pour créer un nouvel élément.
+- Une barre de recherche filtrant des éléments par titre.
 
-## Version 6
-- **Focus:** API
-- **Branch:** api
+# v5 SPA / Alpine.js - Live Coding
 
-## Version 7
-- **Focus:** Mobile App
-- **Branch:** mobile
+# v6 Spatie / Authorization - Live Coding
 
----
+# v7 API - Live Coding
 
-##  Sujet - Live Coding
-
-- Un bouton "Ajouter Contact" qui ouvre une modale pour créer un nouveau contact.
-- Une barre de recherche filtrant les contacts par nom.
-
+# v8 Mobile App - Live Coding
