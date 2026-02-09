@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
@@ -21,6 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('access-admin', function (User $user) {
+            return $user->role === 'admin';
+        });
+
+        Gate::define('update-contact', function (User $user, \App\Models\Contact $contact) {
+            return $user->role === 'admin' || $user->id === $contact->user_id;
+        });
+
+        Gate::define('delete-contact', function (User $user, \App\Models\Contact $contact) {
+            return $user->role === 'admin' || $user->id === $contact->user_id;
+        });
     }
 }
