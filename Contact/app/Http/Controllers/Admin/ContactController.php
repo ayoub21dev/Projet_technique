@@ -24,7 +24,7 @@ class ContactController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'html' => view('admin.contacts.rows', compact('contacts'))->render(),
-                'pagination' => property_exists($contacts, 'links') ? (string) $contacts->appends($request->all())->links() : ''
+                'pagination' => view('admin.contacts._pagination', compact('contacts'))->render()
             ]);
         }
 

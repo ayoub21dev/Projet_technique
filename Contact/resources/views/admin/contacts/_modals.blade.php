@@ -1,6 +1,6 @@
 {{-- Create Contact Modal --}}
-<div id="create-contact-modal" x-show="showCreateModal" x-cloak @keydown.escape.window="closeCreateModal()" class="w-full h-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto bg-slate-900/50 backdrop-blur-sm">
-  <div @click.self="closeCreateModal()" class="mt-7 opacity-100 ease-out transition-all sm:max-w-xl sm:w-full m-3 sm:mx-auto">
+<div id="create-contact-modal" x-show="showCreateModal" x-cloak @keydown.escape.window="closeCreateModal()" @click.self="closeCreateModal()" class="w-full h-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto bg-slate-900/50 backdrop-blur-sm">
+  <div class="mt-7 opacity-100 ease-out transition-all sm:max-w-xl sm:w-full m-3 sm:mx-auto">
     <div class="flex flex-col bg-white border border-slate-200 shadow-xl rounded-2xl">
       <div class="flex justify-between items-center py-4 px-6 border-b border-slate-100">
         <div>
@@ -28,8 +28,8 @@
 </div>
 
 {{-- Edit Contact Modal --}}
-<div id="edit-contact-modal" x-show="showEditModal" x-cloak @keydown.escape.window="closeEditModal()" class="w-full h-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto bg-slate-900/50 backdrop-blur-sm">
-  <div @click.self="closeEditModal()" class="mt-7 opacity-100 ease-out transition-all sm:max-w-xl sm:w-full m-3 sm:mx-auto">
+<div id="edit-contact-modal" x-show="showEditModal" x-cloak @keydown.escape.window="closeEditModal()" @click.self="closeEditModal()" class="w-full h-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto bg-slate-900/50 backdrop-blur-sm">
+  <div class="mt-7 opacity-100 ease-out transition-all sm:max-w-xl sm:w-full m-3 sm:mx-auto">
     <div class="flex flex-col bg-white border border-slate-200 shadow-xl rounded-2xl">
       <div class="flex justify-between items-center py-4 px-6 border-b border-slate-100">
         <div>
@@ -62,7 +62,7 @@
 </div>
 
 {{-- Delete Confirmation Modal --}}
-<div id="delete-contact-modal" x-show="showDeleteModal" x-cloak @keydown.escape.window="closeDeleteModal()" class="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+<div id="delete-contact-modal" x-show="showDeleteModal" x-cloak @keydown.escape.window="closeDeleteModal()" @click.self="closeDeleteModal()" class="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
   <div class="w-full max-w-md m-3">
     <div class="bg-white border border-slate-200 rounded-2xl shadow-xl p-6">
       <div class="flex items-center gap-4 mb-4">

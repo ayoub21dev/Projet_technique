@@ -1,55 +1,90 @@
 @extends('layouts.guest')
+@section('title', 'Sign Up - ConnectHub')
 
 @section('content')
-<div class="max-w-md w-full bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="px-6 py-8">
-        <h2 class="text-2xl font-bold text-center text-gray-700 mb-8">Create an Account</h2>
+<div class="flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-10 sm:px-6 lg:px-8">
+    <div class="w-full max-w-sm p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-slate-900 dark:border-gray-700">
+        <div class="text-center mb-5">
+            <h1 class="block text-xl font-bold text-gray-800 dark:text-white">Sign up</h1>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Already have an account?
+                <a class="text-blue-600 decoration-2 hover:underline font-medium dark:text-blue-500" href="{{ route('login') }}">
+                    Sign in here
+                </a>
+            </p>
+        </div>
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
+            
+            <div class="grid gap-y-3">
+                <!-- Form Group -->
+                <div>
+                    <label for="name" class="block text-sm mb-1 font-medium text-gray-700 dark:text-gray-300">Name</label>
+                    <div class="relative">
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus class="py-2 px-3 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" aria-describedby="name-error">
+                        @error('name')
+                        <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
+                            <svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                            </svg>
+                        </div>
+                        @enderror
+                    </div>
+                    @error('name')
+                    <p class="hidden text-xs text-red-600 mt-2" id="name-error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <!-- End Form Group -->
 
-            <div class="mb-6">
-                <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}" required autofocus
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror">
-                @error('name')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                <!-- Form Group -->
+                <div>
+                    <label for="email" class="block text-sm mb-1 font-medium text-gray-700 dark:text-gray-300">Email address</label>
+                    <div class="relative">
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required class="py-2 px-3 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" aria-describedby="email-error">
+                        @error('email')
+                        <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
+                            <svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                            </svg>
+                        </div>
+                        @enderror
+                    </div>
+                    @error('email')
+                    <p class="hidden text-xs text-red-600 mt-2" id="email-error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <!-- End Form Group -->
 
-            <div class="mb-6">
-                <label for="email" class="block text-gray-700 font-bold mb-2">Email Address</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
-                @error('email')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                <!-- Form Group -->
+                <div>
+                    <label for="password" class="block text-sm mb-1 font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required class="py-2 px-3 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" aria-describedby="password-error">
+                        @error('password')
+                        <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
+                            <svg class="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                            </svg>
+                        </div>
+                        @enderror
+                    </div>
+                    @error('password')
+                    <p class="hidden text-xs text-red-600 mt-2" id="password-error">{{ $message }}</p>
+                    @enderror
+                </div>
+                <!-- End Form Group -->
 
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-                <input type="password" name="password" id="password" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
-                @error('password')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                <!-- Form Group -->
+                <div>
+                    <label for="password_confirmation" class="block text-sm mb-1 font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                    <div class="relative">
+                        <input type="password" id="password_confirmation" name="password_confirmation" required class="py-2 px-3 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
+                    </div>
+                </div>
+                <!-- End Form Group -->
 
-            <div class="mb-6">
-                <label for="password_confirmation" class="block text-gray-700 font-bold mb-2">Confirm Password</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-
-            <div class="mb-6">
-                <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Register
-                </button>
-            </div>
-
-            <div class="text-center">
-                <p class="text-sm text-gray-600">Already have an account? <a href="{{ route('login') }}" class="text-blue-500 hover:text-blue-700 font-semibold">Login</a></p>
+                <button type="submit" class="w-full py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 shadow-md shadow-blue-200/50 hover:shadow-lg transition-all active:scale-[0.98]">Sign up</button>
             </div>
         </form>
     </div>
