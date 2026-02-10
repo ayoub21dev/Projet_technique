@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\City;
 use App\Services\ContactService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ContactController extends Controller
 {
@@ -24,7 +25,7 @@ class ContactController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'html' => view('admin.contacts.rows', compact('contacts'))->render(),
-                'pagination' => view('admin.contacts._pagination', compact('contacts'))->render()
+                'pagination' => method_exists($contacts, 'links') ? (string) $contacts->appends($request->all())->links() : ''
             ]);
         }
 
@@ -54,7 +55,7 @@ class ContactController extends Controller
 
     public function edit(Contact $contact)
     {
-        $this->authorizeContact($contact);
+        Gate::authorize('update-contact', $contact);
         
         if (request()->wantsJson()) {
             return response()->json($contact->load('cities'));
@@ -68,7 +69,7 @@ class ContactController extends Controller
 
     public function update(Request $request, Contact $contact)
     {
-        $this->authorizeContact($contact);
+        Gate::authorize('update-contact', $contact);
         $data = $this->validateContact($request);
         $this->contactService->update($contact, $data);
 
@@ -86,7 +87,7 @@ class ContactController extends Controller
 
     public function destroy(Contact $contact)
     {
-        $this->authorizeContact($contact);
+        Gate::authorize('delete-contact', $contact);
         $this->contactService->delete($contact);
 
         if (request()->ajax()) {
@@ -111,8 +112,6 @@ class ContactController extends Controller
 
     private function authorizeContact(Contact $contact): void
     {
-        // if (auth()->user()->role !== 'admin' && $contact->user_id !== auth()->id()) {
-        //     abort(403);
-        // }
+        // Handled by Gates in controller methods
     }
 }

@@ -241,12 +241,30 @@
                     </div>
                     
                     <!-- User Menu -->
-                    <div class="relative">
-                        <div class="flex items-center gap-3 cursor-pointer">
-                            <span class="hidden md:block text-sm font-medium text-slate-700">{{ Auth::user()->name ?? 'User' }}</span>
-                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm">
+                    <div class="relative group">
+                        <div class="flex items-center gap-3 cursor-pointer py-1 px-2 rounded-lg hover:bg-slate-50 transition-colors">
+                            <span class="hidden md:block text-sm font-semibold text-slate-700">{{ Auth::user()->name ?? 'User' }}</span>
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm shadow-sm">
                                 {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
                             </div>
+                        </div>
+                        
+                        <!-- Dropdown -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="px-4 py-2 border-b border-slate-100 mb-1">
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Account</p>
+                                <p class="text-sm font-medium text-slate-700 truncate">{{ Auth::user()->email }}</p>
+                            </div>
+                            
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    Sign Out
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -263,6 +281,18 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         Dashboard
                     </a>
+                </li>
+                
+                <li class="pt-4 mt-4 border-t border-slate-100">
+                    <form method="POST" action="{{ route('logout') }}" id="sidebar-logout-form">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-x-3.5 py-2.5 px-3 text-red-600 hover:bg-red-50 text-sm rounded-lg transition-all duration-200 font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
                 </li>
 
             </ul>

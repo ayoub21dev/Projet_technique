@@ -53,7 +53,7 @@ Partie Admin: Tableau de bord sécurisé pour les opérations CRUD. Fonctionnali
 - **Architecture N-tier :** Services
 - **Architecture :** MVC
 - **Moteur de vues :** Blade
-- **AJAX :** Interactivité fluide sans rechargement
+- **Alpine.js:** Interactivité fluide sans rechargement
 - **Gestion des Images :** Upload et stockage sécurisé
 
 ---
