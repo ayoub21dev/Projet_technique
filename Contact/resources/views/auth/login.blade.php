@@ -1,4 +1,5 @@
 @extends('layouts.guest')
+@section('title', 'Sign In - ConnectHub')
 
 @section('content')
 <div class="min-h-screen w-full flex items-center justify-center bg-slate-50">
